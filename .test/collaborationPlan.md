@@ -13,7 +13,7 @@ The project is divided in two main componenets that can be developed in parallel
 miniRT/
 ├── src/
 │   ├── parser/       # Student A
-│   ├── screen/      # Student A
+│   ├── screen/       # Student A
 │   ├── render/       # Student B
 │   ├── math/         # Student B
 │   ├── main.c
@@ -287,3 +287,5 @@ L 10,10,0 0.7 255,255,255
 sp 0,0,10 5 255,0,0
 sp 5,0,15 3 0,255,0
 pl 0,-5,0 0,1,0 255,255,255
+```
+
