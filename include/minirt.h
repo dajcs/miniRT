@@ -6,12 +6,21 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/09/30 16:49:55 by anemet           ###   ########.fr       */
+/*   Updated: 2025/09/30 23:47:06 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINIRT_H
 # define MINIRT_H
+
+#include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+#include "libft.h"
+#include "parser.h"
 
 // Using t_vec3 for points, vectors, and colors for simplicity
 typedef struct s_vec3
