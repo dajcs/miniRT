@@ -1,0 +1,261 @@
+
+
+### Recommended Ray Tracing Method: Whitted-Style (Recursive) Ray Tracing
+
+The method Recursive Ray Tracing is often called **Whitted-Style Ray Tracing**. It's a good choice for this project for several reasons:
+
+*   **Simplicity and Elegance:** The core logic is straightforward: for each pixel, you trace a primary ray. If it hits an object, you then trace secondary rays from the hit point towards lights (for shadows) and in reflection/refraction directions.
+*   **Scalability for Bonuses:** It can start with a recursion depth of 1 (or even 0, which means no reflections) for the mandatory part. This simplifies the initial implementation to only handle primary rays and shadow rays. Later, for bonuses like reflective surfaces, you can easily increase the recursion depth.
+*   **Educational Value:** It's the classic ray tracing algorithm and provides a solid foundation in computer graphics concepts.
+
+Given the project constraints and hardware, a recursive approach with a limited depth will perform adequately. For the mandatory part, implement a "depth 1" trace:
+
+1.  **Primary Ray:** From the camera through the pixel.
+2.  **Shadow Rays:** From the intersection point to each light source.
+
+This avoids the complexity of full global illumination models like Path Tracing, which would be overkill and likely too slow given the constraints.
+
+---
+
+## Revised miniRT Project Collaboration Plan
+
+### 1. Overview & Philosophy
+
+This plan refines the initial component division. 
+- **Student A** will focus on the **"front-end"** – parsing the scene description and getting it to the screen. 
+- **Student B** will own the **"back-end"** – the core rendering logic that turns the scene data into pixels. 
+
+This clean separation minimizes dependencies and allows for independent testing.
+
+**Key Principle:** "Code to an interface." Student A and Student B should agree on the exact definitions of the shared data structures in `minirt.h` *first*. As long as those structures don't change, each student can work on their part with confidence.
+
+### 2. Refined Shared Data Structures (`include/minirt.h`)
+
+Here are some suggested improvements to your initial structures for clarity and efficiency.
+
+```c
+#ifndef MINIRT_H
+# define MINIRT_H
+
+// Using t_vec3 for points, vectors, and colors for simplicity.
+typedef struct s_vec3
+{
+    double x;
+    double y;
+    double z;
+}               t_vec3;
+
+typedef t_vec3 t_point3; // Alias for clarity when representing points
+typedef t_vec3 t_color;  // Alias for clarity when representing RGB color (0-1 range)
+
+// A ray is defined by its origin and a direction vector.
+typedef struct s_ray
+{
+    t_point3 origin;
+    t_vec3   direction;
+}               t_ray;
+
+// Camera definition. Pre-calculating viewport values is highly recommended.
+typedef struct s_camera
+{
+    t_point3 lookfrom;      // The camera's position (parsed 'C' coordinates)
+    t_vec3   lookat;        // The point the camera is looking at
+    double   vfov;          // Vertical field-of-view in degrees
+    // --- Pre-calculated values for rendering ---
+    t_vec3   u, v, w;       // Orthonormal basis for camera orientation
+    double   viewport_height;
+    double   viewport_width;
+    t_point3 viewport_u;    // Vector across viewport horizontal edge
+    t_point3 viewport_v;    // Vector down viewport vertical edge
+    t_point3 pixel00_loc;   // Location of the top-left pixel
+}               t_camera;
+
+// Use a linked list for lights and objects for easier parsing.
+typedef struct s_light
+{
+    t_point3      position;
+    double        ratio;
+    t_color       color;
+    struct s_light *next;
+}               t_light;
+
+// Generic object structure using a union to hold different shapes.
+// This simplifies storage and traversal.
+typedef enum e_object_type
+{
+    SPHERE,
+    PLANE,
+    CYLINDER
+} t_object_type;
+
+typedef struct s_object
+{
+    t_object_type type;
+    t_color       color;
+    void          *shape_data; // Pointer to one of the structs below
+    struct s_object *next;
+}               t_object;
+
+typedef struct s_sphere
+{
+    t_point3 center;
+    double   radius;
+}               t_sphere;
+
+typedef struct s_plane
+{
+    t_point3 point;
+    t_vec3   normal;
+}               t_plane;
+
+typedef struct s_cylinder
+{
+    t_point3 center;
+    t_vec3   axis; // Normalized direction vector
+    double   radius;
+    double   height;
+}               t_cylinder;
+
+// The main scene struct.
+typedef struct s_scene
+{
+    int      win_width;
+    int      win_height;
+    t_color  ambient_light;
+    double   ambient_ratio;
+    t_camera camera;
+    t_light  *lights;
+    t_object *objects;
+}               t_scene;
+
+// Record of a ray-object intersection.
+typedef struct s_hit_record
+{
+    t_point3 p;         // Intersection point
+    t_vec3   normal;    // Surface normal at the intersection point
+    t_color  color;     // Color of the object hit
+    double   t;         // 'time' or distance along the ray
+    int      front_face; // 1 if ray hits from outside, 0 if from inside
+}               t_hit_record;
+
+#endif
+```
+
+### 3. Student A: Scene Parsing & Display System
+
+**Goal:** Read a `.rt` file, validate it, populate the `t_scene` struct, and set up a window to display the final image.
+
+#### **Module 1: Parser (`src/parser/`)**
+
+*   **`parser.c`**: Main parsing logic.
+    *   `t_scene *parse_scene(const char *filename)`: Orchestrates the parsing process. It opens the file, reads it line-by-line, and calls the appropriate sub-parser for each element type.
+    *   `void free_scene(t_scene *scene)`: Essential for clean exit. Frees all allocated memory (objects, lights, etc.).
+
+*   **`parser_utils.c`**: Helper functions for parsing individual data types. These are crucial for robust error checking.
+    *   `int parse_vec3(char *str, t_vec3 *vec)`: Parses "x,y,z" into a `t_vec3`. Returns success/failure.
+    *   `int parse_color(char *str, t_color *color)`: Parses "R,G,B" and normalizes values to the `[0, 1]` range (e.g., `255` -> `1.0`). This simplifies lighting calculations for Student B.
+    *   `double ft_atof(char *str)`: A robust `atof` that can handle parsing errors. `libft` might need this.
+
+*   **`parser_elements.c`**: Functions to parse each specific scene element.
+    *   `void parse_ambient(char **tokens, t_scene *scene)`
+    *   `void parse_camera(char **tokens, t_scene *scene)`
+    *   `void parse_light(char **tokens, t_scene *scene)`
+    *   `void add_object(t_scene *scene, t_object *new_obj)`: A helper to add a new object to the front of the `objects` linked list.
+    *   `void parse_sphere(char **tokens, t_scene *scene)`: Allocates `t_object` and `t_sphere`, populates them, and calls `add_object`.
+    *   `void parse_plane(char **tokens, t_scene *scene)`
+    *   `void parse_cylinder(char **tokens, t_scene *scene)`
+
+#### **Module 2: Window Management (`src/screen/`)**
+
+*   **`window.c`**: Interfacing with `minilibX`.
+    *   `t_mlx_data *init_window(int width, int height, char *title)`: Initializes MLX, creates a window and an image buffer.
+    *   `void my_put_pixel_to_img(t_mlx_data *data, int x, int y, int color)`: Puts a single pixel into the image buffer.
+    *   `int color_to_int(t_color color)`: Converts your `t_color` (with `double`s from 0-1) back to an integer format that MLX can display.
+
+*   **`hooks.c`**: Event handling.
+    *   `int key_hook(int keycode, t_program_data *data)`: Handles `Esc` key press.
+    *   `int close_hook(t_program_data *data)`: Handles clicking the red cross.
+    *   `void setup_hooks(t_program_data *data)`: Registers the hook functions with MLX.
+
+#### **Module 3: Main (`src/main.c`)**
+
+*   `main()`:
+    1.  Validate command-line arguments (`argc`, `argv`, file extension).
+    2.  Call `parse_scene()` to populate the `t_scene` struct.
+    3.  If parsing succeeds, call `init_window()`.
+    4.  Call the main `render()` function (from Student B's part).
+    5.  Call `mlx_put_image_to_window()`.
+    6.  Call `setup_hooks()`.
+    7.  Call `mlx_loop()`.
+
+**Testing Strategy for Student A:**
+
+1.  **Unit Test Parsers:** Create a suite of `.rt` files: one correct, and many incorrect ones (wrong number of args, values out of range, bad formatting) to test every error path.
+2.  **Mock Renderer:** Write a temporary `render()` function that fills the screen with a single color or a gradient. This allows you to test the entire pipeline from file parsing to window display without needing Student B's code.
+
+### 4. Student B: Ray Tracing Engine
+
+**Goal:** Implement the mathematical and rendering logic to compute the color of each pixel based on the scene description.
+
+#### **Module 1: Math Library (`src/math/`)**
+
+This is the foundation. It must be flawless.
+
+*   **`vec3_ops1.c`**: Basic operations.
+    *   `t_vec3 vec3_add(t_vec3 v1, t_vec3 v2)`
+    *   `t_vec3 vec3_sub(t_vec3 v1, t_vec3 v2)`
+    *   `t_vec3 vec3_mul(t_vec3 v, double t)` (scalar multiplication)
+    *   `t_vec3 vec3_div(t_vec3 v, double t)` (scalar division)
+    *   `double vec3_dot(t_vec3 v1, t_vec3 v2)`
+
+*   **`vec3_ops2.c`**: Advanced operations.
+    *   `double vec3_length_squared(t_vec3 v)`: (Faster than `length` as it avoids `sqrt`)
+    *   `double vec3_length(t_vec3 v)`
+    *   `t_vec3 vec3_normalize(t_vec3 v)`
+    *   `t_vec3 vec3_cross(t_vec3 u, t_vec3 v)`
+
+#### **Module 2: Ray Tracing (`src/render/`)**
+
+*   **`ray.c`**:
+    *   `t_ray create_ray(t_point3 origin, t_vec3 direction)`
+    *   `t_point3 ray_at(t_ray r, double t)`: Calculates the point along the ray at distance `t`.
+
+*   **`intersections.c`**:
+    *   `int hit_object(t_object *obj, t_ray *ray, double t_min, double t_max, t_hit_record *rec)`: A dispatcher function that calls the correct intersection function below based on `obj->type`.
+    *   `int hit_sphere(t_sphere *sp, t_ray *ray, ...)`: Implements the ray-sphere intersection formula.
+    *   `int hit_plane(t_plane *pl, t_ray *ray, ...)`
+    *   `int hit_cylinder(t_cylinder *cy, t_ray *ray, ...)`: This is the most complex one. Break it into parts: intersecting with the infinite cylinder walls, and intersecting with the top/bottom caps (which are planes).
+
+*   **`camera.c`**:
+    *   `void setup_camera(t_camera *cam, int img_width, int img_height)`: This is a crucial function. It takes the parsed FOV and orientation vectors and pre-calculates the `viewport_*` and basis vectors (`u,v,w`) needed for rendering. This should be called once after parsing.
+
+*   **`renderer.c`**: The main engine.
+    *   `t_color ray_color(t_ray r, t_scene *scene)`: This is the core recursive (or in this case, iterative for the mandatory part) function.
+        1.  Initialize a `t_hit_record`.
+        2.  Loop through all `objects` in the scene, calling `hit_object` for each one to find the *closest* intersection.
+        3.  If there is a hit:
+            a. Call `calculate_lighting()` to get the final color.
+            b. Return that color.
+        4.  If there is no hit, return a background color (e.g., black or a simple sky gradient).
+    *   `void render(t_scene *scene, t_mlx_data *mlx)`: The top-level rendering function called by `main`.
+        1.  It loops through every pixel (`y` from 0 to height, `x` from 0 to width).
+        2.  For each pixel, it calculates the ray direction using the pre-calculated camera values.
+        3.  It calls `ray_color()` to get the color for that ray.
+        4.  It converts the `t_color` to an `int` and calls `my_put_pixel_to_img()`.
+
+*   **`lighting.c`**:
+    *   `t_color calculate_lighting(t_hit_record *rec, t_scene *scene)`:
+        1.  Start with the ambient light: `final_color = vec3_mul(scene->ambient_light, scene->ambient_ratio)`.
+        2.  Loop through every `light` in the scene:
+            a. Calculate the direction vector from the hit point (`rec->p`) to the light's position.
+            b. **Shadows:** Create a "shadow ray" from the hit point towards the light. Call the intersection logic again to see if any other object is between the point and the light. If so, `continue` to the next light.
+            c. **Diffuse:** Calculate the dot product of the light vector and the surface normal (`rec->normal`). If it's positive, add the diffuse contribution to `final_color`. The contribution is `light_color * light_ratio * dot_product * object_color`.
+        3.  Return the clamped `final_color` (ensure RGB values don't exceed 1.0).
+
+**Testing Strategy for Student B:**
+
+1.  **Unit Test Math:** Write a separate `main` to test all vector functions with known inputs and outputs.
+2.  **Test Intersections:** Write tests that create specific rays and objects and verify that `hit_object` returns the correct intersection point `t` and normal vector.
+3.  **PPM Image Output:** Instead of relying on `minilibX`, create a function that writes the rendered image to a `.ppm` file. This is a simple text-based image format. It allows you to test the entire rendering engine on your machine without needing Student A's part to be complete. You can view the `.ppm` files with a simple image viewer.
+
+By following this detailed plan, you can work in parallel effectively and integrate your parts smoothly once the shared data structures are finalized. Good luck

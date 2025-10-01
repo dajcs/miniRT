@@ -6,21 +6,22 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/09/30 23:47:06 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/01 14:52:53 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINIRT_H
 # define MINIRT_H
 
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
+# define _GNU_SOURCE
+# include <math.h>
+# include <stdlib.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <fcntl.h>
 
-#include "libft.h"
-#include "parser.h"
+# include "libft.h"
+# include "parser.h"
 
 // Using t_vec3 for points, vectors, and colors for simplicity
 typedef struct s_vec3
@@ -43,8 +44,8 @@ typedef struct s_ray
 // Camera definition. Pre-calculating viewport values is highly recommended
 typedef struct s_camera
 {
-	t_point3		lookfrom; // The camera's position (parsed 'C' coordinates)
-	t_vec3			lookat;	// The point the camera is looking at
+	t_point3		origin;	// The camera's position (parsed 'C' coordinates)
+	t_vec3			orientation;	// The point the camera is looking at
 	double			vfov;	// Vertical field of view in degrees
 	// --- Pre-calculated values for rendering ---
 	t_vec3			u;		// Camera coordinate system basis vectors
@@ -112,7 +113,9 @@ typedef struct s_scene
 	int				height;
 	t_color			ambient_light;	// Ambient light color (0-255 range)
 	double			ambient_ratio;	// Ambient light ratio (0.0 - 1.0)
+	int				has_ambient;	// Flag to ensure only one ambient light
 	t_camera		camera;
+	int				has_camera;		// Flag to ensure only one camera
 	t_light			*lights;		// Linked list of lights
 	t_object		*objects;		// Linked list of objects
 }					t_scene;

@@ -18,7 +18,7 @@ int	count_tokens(char **tokens)
 	int	i;
 
 	i = 0;
-	while(tokens && tokens[i])
+	while (tokens && tokens[i])
 		i++;
 	return (i);
 }
