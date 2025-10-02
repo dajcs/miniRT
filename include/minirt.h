@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/01 14:52:53 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/01 22:17:33 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <fcntl.h>
 
 # include "libft.h"
+# include "mlx.h"
 # include "parser.h"
 
 // Using t_vec3 for points, vectors, and colors for simplicity
@@ -129,5 +130,26 @@ typedef struct s_hit_record
 	double			t;		// 'time' or distance along the ray
 	int				front_face;	// 1 if ray hits from outside, 0 if from inside
 }					t_hit_record;
+
+// --- Window management ---
+
+// Holds all data related to the MiniLibX window and image buffer
+typedef struct s_mlx_data
+{
+	void			*mlx_ptr;	// Pointer to the MLX instance
+	void			*win_ptr;	// Pointer to the window
+	void			*img_ptr;	// Pointer to the image buffer
+	char			*addr;		// Address of the image data
+	int				bits_per_pixel; // Bits per pixel in the image
+	int				line_length;	// Length of a line in bytes
+	int				endian;	// Endianness of the image data
+}					t_mlx_data;
+
+// A master struct to hold pointers to all major components of the program
+typedef struct s_program_data
+{
+	t_scene			*scene;
+	t_mlx_data		*mlx;
+}					t_program_data;
 
 #endif
