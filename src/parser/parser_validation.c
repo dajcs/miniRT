@@ -36,7 +36,7 @@ int	validate_fov(double fov)
 */
 int	validate_normalized_vector(t_vec3 vec)
 {
-	double	length;
+	double			length;
 	const double	epsilon = 1e-6;
 
 	length = sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
