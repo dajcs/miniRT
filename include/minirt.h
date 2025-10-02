@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/01 22:17:33 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/02 11:24:12 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 
 # include "libft.h"
 # include "mlx.h"
-# include "parser.h"
 
 // Using t_vec3 for points, vectors, and colors for simplicity
 typedef struct s_vec3
@@ -102,7 +101,7 @@ typedef struct s_cylinder
 {
 	t_point3		center; // Center of the cylinder base (parsed 'cy' coords)
 	t_vec3			axis;	// Axis vector (parsed 'cy' orientation vector,
-						// should be normalized)
+							// should be normalized)
 	double			diameter; // Parsed 'cy' diameter
 	double			height;	// Parsed 'cy' height
 }					t_cylinder;
@@ -151,5 +150,52 @@ typedef struct s_program_data
 	t_scene			*scene;
 	t_mlx_data		*mlx;
 }					t_program_data;
+
+// grep -Ev '^[[:space:]/#\{\*\}]'  *.c
+
+/*
+	########### Parser Module ##############
+	TODO: ft_atof() -- in libft
+	TODO: free_scene()
+	TODO: parse_plane()
+	TODO: parse_cylinder()
+*/
+
+/* --- errors.c --- */
+int					error_msg(char *message);
+
+/* --- parser.c --- */
+t_scene				*parse_scene(const char *filename);
+
+/* --- parser_elements.c --- */
+int					parse_ambient(char **tokens, t_scene *scene);
+int					parse_camera(char **tokens, t_scene *scene);
+int					parse_light(char **tokens, t_scene *scene);
+int					parse_sphere(char **tokens, t_scene *scene);
+
+/* --- parser_utils.c --- */
+int					count_tokens(char **tokens);
+void				free_tokens(char **tokens);
+int					parse_color(char *str, t_color *color);
+int					parse_vec3(char *str, t_vec3 *vec);
+int					parse_double(char *str, double *val);
+
+/*
+	############## Window Module ###################
+*/
+
+/* --- cleanup.c --- */
+int					cleanup(t_program_data *data);
+
+/* --- hooks.c --- */
+
+int					key_hook(int keycode, t_program_data *data);
+int					close_hook(t_program_data *data);
+void				setup_hooks(t_program_data *data);
+
+/* --- window.c --- */
+void				my_put_pixel_to_img(t_mlx_data *data, int x, int y,
+						int color);
+t_program_data		*init_program_data(char *scene_file);
 
 #endif

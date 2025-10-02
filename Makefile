@@ -6,7 +6,7 @@
 #    By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 23:47:32 by anemet            #+#    #+#              #
-#    Updated: 2025/10/01 22:02:19 by anemet           ###   ########.fr        #
+#    Updated: 2025/10/02 10:48:27 by anemet           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,8 +21,12 @@ CFLAGS = -Wall -Wextra -Werror -g
 # Source files
 SRCS = src/main.c \
        src/parsing/errors.c \
-	   src/parsing/parser_utils.c \
 	   src/parsing/parser.c \
+	   src/parsing/parser_elements.c \
+	   src/parsing/parser_utils.c \
+	   src/window/cleanup.c \
+	   src/window/hooks.c \
+	   src/window/window.c \
 
 
 # Object files for miniRT
