@@ -5,54 +5,47 @@
 #                                                     +:+ +:+         +:+      #
 #    By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/09/30 23:47:32 by anemet            #+#    #+#              #
-#    Updated: 2025/10/02 10:48:27 by anemet           ###   ########.fr        #
+#    Created: 2025/10/02 13:34:30 by anemet            #+#    #+#              #
+#    Updated: 2025/10/02 15:50:21 by anemet           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-
-# Program name
 NAME = miniRT
 
 # Compiler and flags
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
+# libft & minilibx
+MLX_DIR = ./minilibx/
+LIBFT_DIR = ./libft/
+MLX_LIB = $(MLX_DIR)libmlx.a
+LIBFT = $(LIBFT_DIR)libft.a
+LDFLAGS = -L$(LIBFT_DIR) -lft -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
 
 # Source files
-SRCS = src/main.c \
-       src/parsing/errors.c \
-	   src/parsing/parser.c \
-	   src/parsing/parser_elements.c \
-	   src/parsing/parser_utils.c \
-	   src/window/cleanup.c \
-	   src/window/hooks.c \
-	   src/window/window.c \
+SRCS_PARSER = src/parser/parser.c \
+                src/parser/parser_utils.c \
+                src/parser/parser_elements.c \
+                src/parser/parser_element2.c \
+				src/parser/parser_validation.c \
+                src/parser/errors.c
 
+SRCS_WINDOW = src/window/window.c \
+                src/window/hooks.c \
+                src/window/cleanup.c
 
-# Object files for miniRT
-OBJ_DIR = obj
-OBJS = $(addprefix $(OBJ_DIR)/,$(SRCS:.c=.o))
+# Test-specific files
+SRCS_TEST = src/main.c \
+            src/render/mock_render.c
 
-# Cleanup command
-RM = rm -f
+# Combine all source files
+SRCS = $(SRCS_PARSER) $(SRCS_WINDOW) $(SRCS_TEST)
 
-# ------------------- Directories ---------------- #
+# Object files
+OBJS = $(SRCS:.c=.o)
 
-# Libft directory
-LIBFT_DIR = libft
-LIBFT = $(LIBFT_DIR)/libft.a
-
-# MiniLibX directory
-MLX_DIR = ./minilibx
-MLX_LIB = $(MLX_DIR)/libmlx.a
-
-# ------------------ Compiler/Linker Flags ---------- #
-
-# Include paths for headers (-I)
+# Header include paths
 INCLUDES = -I./include -I$(LIBFT_DIR) -I$(MLX_DIR)
-
-# Library paths (-L) and library names (-l)
-LDFLAGS = -L$(LIBFT_DIR) -lft -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
 
 # ------- Rules ----------
 
@@ -78,46 +71,22 @@ $(MLX_LIB):
 	@echo "Compiling MiniLibX..."
 	@$(MAKE) -s -C $(MLX_DIR)
 
-# Rule to compile the fdf source files into object files
-# %.o: %.c fdf.h
-# 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-
-# $@ - inside a recipe line it expands to the exact filename of the current
-#                                             target that the rule is building
-# $< - the first prerequisite (handy in single-source compile rules,
-#                                                            e.g. the .c file)
-# $^ - the full list of prerequisites (deduplicated).
-# $? - only the prerequisites that are newer than the target.
-
-# pattern rule - target path + order-only dep on $(OBJ_DIR)
-$(OBJ_DIR)/%.o: %.c fdf.h | $(OBJ_DIR)
+# Compile source files to object files
+%.o: %.c
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-# make sure obj/ exists before compiling
-# `| $(OBJ_DIR)` order-only prerequisite, `mkdir -p obj` once, no needless rbld
-$(OBJ_DIR):
-	@mkdir -p $@
-
-# Rule to remove object files
+# Standard rules
 clean:
-	@echo "Cleaning libft..."
-	@$(MAKE) -s -C $(LIBFT_DIR) clean
-	@echo "Cleaning MiniLibX..."
-	@$(MAKE) -s -C $(MLX_DIR) clean
-	@echo "Removing $(OBJ_DIR) directory..."
-	@$(RM) -r $(OBJ_DIR)
+	@make clean -C $(LIBFT_DIR)
+	@make clean -C $(MLX_DIR)
+	@rm -f $(OBJS)
+	@echo "Object files cleaned."
 
-# Rule to remove object files and the final executable
 fclean: clean
-	@echo "Fcleaning libft..."
-	@$(MAKE) -s -C $(LIBFT_DIR) fclean
-	@echo "Cleaning MiniLibX..."
-	@$(MAKE) -s -C $(MLX_DIR) clean
-	@echo "Removing executable..."
-	@$(RM) $(NAME)
+	@make fclean -C $(LIBFT_DIR)
+	@rm -f $(NAME)
+	@echo "Full clean complete."
 
-# Rule to re-compile the project from scratch
 re: fclean all
 
-# Phony targets are rules that do not produce a file
 .PHONY: all clean fclean re

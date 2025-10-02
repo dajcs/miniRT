@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/02 11:24:12 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/02 15:19:05 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,14 +151,14 @@ typedef struct s_program_data
 	t_mlx_data		*mlx;
 }					t_program_data;
 
-// grep -Ev '^[[:space:]/#\{\*\}]'  *.c
+// grep -E '^[^[:space:]/#{}*][^()]*\('  *.c
 
 /*
 	########### Parser Module ##############
-	TODO: ft_atof() -- in libft
-	TODO: free_scene()
-	TODO: parse_plane()
-	TODO: parse_cylinder()
+	TODO: ft_atof() -- to be checked
+	TODO: free_scene() -- to be checked
+	TODO: parse_plane() -- in parser_element2.c
+	TODO: parse_cylinder() -- in parser_element2.c
 */
 
 /* --- errors.c --- */
@@ -166,6 +166,7 @@ int					error_msg(char *message);
 
 /* --- parser.c --- */
 t_scene				*parse_scene(const char *filename);
+void				free_scene(t_scene *scene);
 
 /* --- parser_elements.c --- */
 int					parse_ambient(char **tokens, t_scene *scene);
@@ -173,12 +174,21 @@ int					parse_camera(char **tokens, t_scene *scene);
 int					parse_light(char **tokens, t_scene *scene);
 int					parse_sphere(char **tokens, t_scene *scene);
 
+/* --- parser_element2.c --- */
+int					parse_plane(char **tokens, t_scene *scene);
+int					parse_cylinder(char **tokens, t_scene *scene);
+
 /* --- parser_utils.c --- */
 int					count_tokens(char **tokens);
 void				free_tokens(char **tokens);
 int					parse_color(char *str, t_color *color);
 int					parse_vec3(char *str, t_vec3 *vec);
 int					parse_double(char *str, double *val);
+
+/* --- parser_validation.c --- */
+int					validate_ratio(double ratio);
+int					validate_fov(double fov);
+int					validate_normalized_vector(t_vec3 vec);
 
 /*
 	############## Window Module ###################

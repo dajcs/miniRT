@@ -1,0 +1,9 @@
+libft/*.o
+minilibx/*.o
+*.out
+miniRT
+libft/libft.a
+src/main.o
+src/parser/*.o
+src/render/*.o
+src/window/*.o

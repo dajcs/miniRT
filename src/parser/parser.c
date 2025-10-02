@@ -6,20 +6,19 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 14:53:51 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/01 16:45:39 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/02 15:08:30 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
 // Dispatcher to call the correct parser based on the element identifier
-// TODO: implement ft_split_ws(line) to split on whitespace
 static int	parse_line(char *line, t_scene *scene)
 {
 	char	**tokens;
 	int		result;
 
-	tokens = ft_split_ws(line);
+	tokens = ft_splits(line, " \t\r\v\f");
 	if (!tokens || !tokens[0])
 	{
 		free_tokens(tokens);
@@ -84,7 +83,6 @@ static int	read_and_parse_file(int fd, t_scene *scene)
 
 // Main entry point for parsing a scene file
 // On read_and_parse_file error: free allocated scene and its contents
-// TODO: free_scene(scene) function to free all allocated memory in scene
 t_scene	*parse_scene(const char *filename)
 {
 	int		fd;
@@ -101,15 +99,40 @@ t_scene	*parse_scene(const char *filename)
 		return (error_msg("Scene memory allocation failed"), NULL);
 	init_scene(scene);
 	if (!read_and_parse_file(fd, scene))
-	{
-		free_scene(scene);
-		close(fd);
-		return (NULL);
-	}
+		return (free_scene(scene), close(fd), NULL);
 	close(fd);
 	if (!scene->has_camera || !scene->has_ambient)
 	{
 		free_scene(scene);
 		return (error_msg("Scene must have Camera and Ambient light"), NULL);
 	}
+	return (scene);
+}
+
+// frees all allocated memory in the scene struct including linked lists
+void	free_scene(t_scene *scene)
+{
+	t_light		*light;
+	t_light		*next_light;
+	t_object	*object;
+	t_object	*next_object;
+
+	if (!scene)
+		return ;
+	light = scene->lights;
+	while (light)
+	{
+		next_light = light->next;
+		free(light);
+		light = next_light;
+	}
+	object = scene->objects;
+	while (object)
+	{
+		next_object = object->next;
+		free(object->shape_data);
+		free(object);
+		object = next_object;
+	}
+	free(scene);
 }

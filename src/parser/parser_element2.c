@@ -1,26 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   errors.c                                           :+:      :+:    :+:   */
+/*   parser_element2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/30 23:27:51 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/02 15:33:53 by anemet           ###   ########.fr       */
+/*   Created: 2025/10/02 14:26:45 by anemet            #+#    #+#             */
+/*   Updated: 2025/10/02 15:31:11 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-/*
-	Writes a standard error prefix, followed by a specific message.
-	Always returns 0 to allow for easy error chaining, e.g.,
-	return (error_msg("Invalid arguments"));
-*/
-int	error_msg(char *message)
+// TODO: Implementation of parse_plane and parse_cylinder like parse_sphere()
+
+// Parses Plane: pl <x,y,z> <nx,ny,nz> <R,G,B>
+int	parse_plane(char **tokens, t_scene *scene)
 {
-	write(2, "Error\n", 6);
-	write(2, message, ft_strlen(message));
-	write(2, "\n", 1);
+	(void)tokens;
+	(void)scene;
+	return (0);
+}
+
+// Parses Cylinder: cy <x,y,z> <nx,ny,nz> <diameter> <height> <R,G,B>
+int	parse_cylinder(char **tokens, t_scene *scene)
+{
+	(void)tokens;
+	(void)scene;
 	return (0);
 }

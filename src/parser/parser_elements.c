@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 13:24:03 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/01 14:48:31 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/02 15:32:54 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ int	parse_light(char **tokens, t_scene *scene)
 		return (error_msg("Light: invalid position coordinates"));
 	if (!parse_double(tokens[2], &ratio) || !validate_ratio(ratio))
 		return (error_msg("Light: invalid brightness ratio"));
+	if (!parse_color(tokens[3], &color))
+		return (error_msg("Light: invalid color format"));
 	light->position = pos;
 	light->ratio = ratio;
 	light->color = color;
@@ -91,12 +93,13 @@ int	parse_sphere(char **tokens, t_scene *scene)
 	if (count_tokens(tokens) != 4)
 		return (error_msg("Sphere: requires 3 parameters"));
 	obj = malloc(sizeof(t_object));
-	if (!obj)
+	sp = malloc(sizeof(t_sphere));
+	if (!obj || !sp)
 		return (error_msg("Sphere: memory allocation failed"));
 	if (!parse_vec3(tokens[1], &sp->center))
 		return (error_msg("Sphere: invalid center coordinates"));
 	if (!parse_double(tokens[2], &sp->radius) || sp->radius <= 0)
-		return (error_msg("Sphere: invalid radius"));
+		return (error_msg("Sphere: invalid diameter"));
 	sp->radius /= 2.0;
 	if (!parse_color(tokens[3], &obj->color))
 		return (error_msg("Sphere: invalid color format"));
@@ -106,7 +109,3 @@ int	parse_sphere(char **tokens, t_scene *scene)
 	scene->objects = obj;
 	return (1);
 }
-
-// Parses Plane: pl <x,y,z> <nx,ny,nz> <R,G,B>
-// Parses Cylinder: cy <x,y,z> <nx,ny,nz> <diameter> <height> <R,G,B>
-// TODO: Implementation of parse_plane and parse_cylinder in similar fashion
