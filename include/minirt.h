@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/02 15:19:05 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/02 20:53:32 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,10 +155,6 @@ typedef struct s_program_data
 
 /*
 	########### Parser Module ##############
-	TODO: ft_atof() -- to be checked
-	TODO: free_scene() -- to be checked
-	TODO: parse_plane() -- in parser_element2.c
-	TODO: parse_cylinder() -- in parser_element2.c
 */
 
 /* --- errors.c --- */
@@ -175,7 +171,9 @@ int					parse_light(char **tokens, t_scene *scene);
 int					parse_sphere(char **tokens, t_scene *scene);
 
 /* --- parser_element2.c --- */
+// TODO: parse_plane()
 int					parse_plane(char **tokens, t_scene *scene);
+// TODO: parse_cylinder()
 int					parse_cylinder(char **tokens, t_scene *scene);
 
 /* --- parser_utils.c --- */
@@ -207,5 +205,30 @@ void				setup_hooks(t_program_data *data);
 void				my_put_pixel_to_img(t_mlx_data *data, int x, int y,
 						int color);
 t_program_data		*init_program_data(char *scene_file);
+
+/*
+	############## Math Module ###################
+*/
+
+/* --- vec3_ops1.c --- */
+t_vec3				vec3_add(t_vec3 v1, t_vec3 v2);
+t_vec3				vec3_sub(t_vec3 v1, t_vec3 v2);
+t_vec3				vec3_mul(t_vec3 v, double t);
+t_vec3				vec3_div(t_vec3 v, double t);
+double				vec3_dot(t_vec3 v1, t_vec3 v2);
+
+/* --- vec3_ops2.c --- */
+double				vec3_length_squared(t_vec3 v);
+double				vec3_length(t_vec3 v);
+t_vec3				vec3_normalize(t_vec3 v);
+t_vec3				vec3_cross(t_vec3 v1, t_vec3 v2);
+
+/*
+	############## Render Module ###################
+*/
+
+/* --- ray.c --- */
+t_ray				create_ray(t_point3 origin, t_vec3 direction);
+t_point3			ray_at(t_ray r, double t);
 
 #endif

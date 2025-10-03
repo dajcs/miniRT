@@ -6,7 +6,7 @@
 #    By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/02 13:34:30 by anemet            #+#    #+#              #
-#    Updated: 2025/10/02 15:50:21 by anemet           ###   ########.fr        #
+#    Updated: 2025/10/02 20:07:59 by anemet           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,25 @@ SRCS_PARSER = src/parser/parser.c \
 SRCS_WINDOW = src/window/window.c \
                 src/window/hooks.c \
                 src/window/cleanup.c
+
+SRCS_MATH = src/math/vec3_ops1.c \
+				src/math/vec3_ops2.c \
+				src/math/matrix_ops.c \
+				src/math/ray_ops.c
+
+SRCS_RENDER = src/render/render.c \
+				src/render/ray.c \
+				src/render/intersections.c \
+				src/render/intersect_sphere.c \
+				src/render/intersect_plane.c \
+				src/render/intersect_cylinder.c \
+				src/render/intersect_cone.c \
+				src/render/lighting.c \
+				src/render/shadows.c \
+				src/render/colors.c \
+				src/render/camera.c \
+				src/render/camera_utils.c \
+				src/render/scene_objects.c
 
 # Test-specific files
 SRCS_TEST = src/main.c \
