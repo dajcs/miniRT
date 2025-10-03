@@ -83,7 +83,7 @@ This file contains the specific logic for parsing each type of scene element.
     4.  Call `parse_vec3(tokens[2], &scene->camera.lookat)`. Check for error and then validate it's a normalized vector using a helper.
     5.  Call `parse_double(tokens[3], &fov_temp)`. Check for error.
     6.  Validate FOV is in the range `[0, 180]`.
-    7.  Assign the validated FOV to `scene->camera.vfov`.
+    7.  Assign the validated FOV to `scene->camera.fov`.
     8.  Return `SUCCESS`.
 
 **3. `int parse_object(char **tokens, t_scene *scene)`**

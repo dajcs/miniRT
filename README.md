@@ -79,7 +79,7 @@ typedef struct s_camera
 {
 	t_point3		origin;	// The camera's position (parsed 'C' coordinates)
 	t_vec3			orientation;	// The point the camera is looking at
-	double			vfov;	// Vertical field of view in degrees
+	double			fov;	// Horizontal field of view in degrees
 	// --- Pre-calculated values for rendering ---
 	t_vec3			u;		// Camera coordinate system basis vectors
 	t_vec3			v;		// Camera coordinate system basis vectors

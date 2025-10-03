@@ -7,3 +7,4 @@ src/main.o
 src/parser/*.o
 src/render/*.o
 src/window/*.o
+libft/libft.a

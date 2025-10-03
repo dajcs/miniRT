@@ -6,7 +6,7 @@
 #    By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/02 13:34:30 by anemet            #+#    #+#              #
-#    Updated: 2025/10/02 20:07:59 by anemet           ###   ########.fr        #
+#    Updated: 2025/10/03 10:11:22 by anemet           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,8 +36,6 @@ SRCS_WINDOW = src/window/window.c \
 
 SRCS_MATH = src/math/vec3_ops1.c \
 				src/math/vec3_ops2.c \
-				src/math/matrix_ops.c \
-				src/math/ray_ops.c
 
 SRCS_RENDER = src/render/render.c \
 				src/render/ray.c \

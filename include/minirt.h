@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/02 20:53:32 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/03 16:19:15 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,17 @@ typedef struct s_camera
 {
 	t_point3		origin;	// The camera's position (parsed 'C' coordinates)
 	t_vec3			orientation;	// The point the camera is looking at
-	double			vfov;	// Vertical field of view in degrees
+	double			fov;	// Horizontal field of view in degrees
 	// --- Pre-calculated values for rendering ---
 	t_vec3			u;		// Camera coordinate system basis vectors
 	t_vec3			v;		// Camera coordinate system basis vectors
 	t_vec3			w;		// Camera coordinate system basis vectors
 	double			viewport_height;
 	double			viewport_width;
-	t_point3		viewport_u;	// Horizontal vector of the viewport
-	t_point3		viewport_v;	// Vertical vector of the viewport
+	t_vec3			viewport_u;	// Horizontal vector of the viewport
+	t_vec3			viewport_v;	// Vertical vector of the viewport
+	t_vec3			pixel_delta_u;	// delta pixel vector (horizontal)
+	t_vec3			pixel_delta_v;	// delta pixel vector (vertical)
 	t_point3		pixel00_loc;	// Location of the top-left pixel
 }					t_camera;
 

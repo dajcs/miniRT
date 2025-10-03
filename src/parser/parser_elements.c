@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 13:24:03 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/02 15:32:54 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/03 16:21:52 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	parse_camera(char **tokens, t_scene *scene)
 		return (error_msg("Camera: invalid FOV"));
 	scene->camera.origin = origin;
 	scene->camera.orientation = orientation;
-	scene->camera.vfov = fov;
+	scene->camera.fov = fov;
 	scene->has_camera = 1;
 	return (1);
 }
