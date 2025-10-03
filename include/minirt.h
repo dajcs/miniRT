@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/03 16:19:15 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/03 21:00:14 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # define _GNU_SOURCE
 # include <math.h>
+# include <float.h> // for DBL_MAX
 # include <stdlib.h>
 # include <stdio.h>
 # include <unistd.h>
@@ -129,7 +130,9 @@ typedef struct s_hit_record
 	t_vec3			normal;	// Surface normal at the intersection
 	t_color			color;	// Color of the object hit
 	double			t;		// 'time' or distance along the ray
-	int				front_face;	// 1 if ray hits from outside, 0 if from inside
+	// int				front_face;	// 1 if ray hits from outside, 0 when
+								// hitting from inside. Alternatively we flip
+								// the normal when hit from inside instead
 }					t_hit_record;
 
 // --- Window management ---

@@ -1,0 +1,137 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   intersections.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/03 18:40:52 by anemet            #+#    #+#             */
+/*   Updated: 2025/10/03 21:21:26 by anemet           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minirt.h"
+
+/* hit_sphere()
+	Tests for a ray-sphere intersection
+	Input:
+		*sp:	the sphere object
+		*ray:	the ray to test
+		t_max	the max distance to consider for an intersection
+		*rec	the hit record to populate if an intersection is found
+	Return 1 if valid intersection is found, 0 otherwise
+
+	This function solves the quadratic equations `at^2 + bt + c = 0`
+	which arises from substituting the ray equation into the sphere equation
+	- ray equation P(t) = O + Dt  // O: ray origin, D: ray direction
+	- sphere equation (P - C) * (P - C) = r^2. // P is on sphere with center C
+																	and radius r
+	(O + Dt - C) * (O + Dt - C) = r^2
+		a = D^2 = 1.0 // D is normalized
+		b = 2 * D * (O - C)
+		c = (O - C) * (O - C) - r^2
+	The discriminant of this equation (b^2 - 4*a*c)
+	determines if there are 0, 1, or 2 intersections. We find the smallest
+	positive root `t` that is within our accepted range [0.001, t_max].
+
+	- the normal of the sphere is pointing outwards from its center
+	- a ray hitting the sphere from outside will have an angle > 90 to the normal
+		so the dot product will be negative
+	- when the ray hits the sphere from inside, the ray has an angle < 90 to the
+		normal, so the dot product will become positive => we're reversing the
+		normal (flipping the point inwards). This guarantees the normal always
+		opposes the ray's direction, which is the standard rendering convention
+*/
+int	hit_sphere(t_sphere *sp, t_ray *ray, double t_max, t_hit_record *rec)
+{
+	t_vec3	oc;
+	double	a;
+	double	b;
+	double	c;
+	double	discriminant;
+
+	oc = vec3_sub(ray->origin, sp->center);
+	a = vec3_length_squared(ray->direction);
+	b = 2 * vec3_dot(ray->direction, oc);
+	c = vec3_length_squared(oc) - sp->radius * sp->radius;
+	discriminant = b * b - 4 * a * c;
+	if (discriminant < 0)
+		return (0);
+	rec->t = (-b - sqrt(discriminant)) / (2.0 * a);
+	if (rec->t <= 0.001 || rec->t >= t_max)
+		rec->t = (-b + sqrt(discriminant)) / (2.0 * a);
+	if (rec->t <= 0.001 || rec->t >= t_max)
+		return (0);
+	rec->p = vec3_add(ray->origin, vec3_mul(ray->direction, rec->t));
+	rec->normal = vec3_normalize(vec3_sub(rec->p, sp->center));
+	if (vec3_dot(ray->direction, rec->normal) > 0.0)
+		rec->normal = vec3_mul(rec->normal, -1);
+	return (1);
+}
+
+// TODO: Student B - Implement Plane Intersection
+/*
+B. Plane Intersection
+
+Equation: A point P is on a plane defined by a point P₀ on the plane
+and a normal vector n if the vector from P₀ to P is perpendicular to n.
+Mathematically: (P - P₀) · n = 0.
+
+How to Solve:
+1. Substitute the ray equation P(t): (O + tD - P₀) · n = 0.
+2. This is a simple linear equation. Solve for t:
+	t = ((P₀ - O) · n) / (D · n)
+3. Edge Case: If the denominator (D · n) is zero, the ray is parallel
+	to the plane and will never intersect (or is inside the plane,
+	which can be ignored).
+4. If a t > 0 exists, that's the intersection distance.
+*/
+	// Formula: t = ((P₀ - O) · n) / (D · n)
+	// 1. Check if denominator (D · n) is close to zero (ray is parallel).
+	// 2. Calculate t.
+	// 3. Check if t is within the valid range [0.001, t_max].
+	// 4. If so, populate the hit record. The normal is just pl->normal.
+int	hit_plane(t_plane *pl, t_ray *ray, double t_max, t_hit_record *rec)
+{
+	return (0);
+}
+
+// TODO: Student B - Implement Cylinder Intersection
+	// This is the most complex intersection.
+	// 1. Solve a quadratic equation for the infinite cylinder wall.
+	// 2. Check if the hit points are within the cylinder's height bounds.
+	// 3. Check for intersections with the top and bottom caps
+			// (which are planes).
+	// 4. Return the closest valid intersection.
+int	hit_cylinder(t_cylinder *cy, t_ray *ray, double t_max, t_hit_record *rec)
+{
+	return (0);
+}
+
+/* hit_object()
+	A dispatcher function that calls the correct intersection routine
+	Input:
+		*obj:	a pointer to the generic object to test
+		*ray:	the ray to test against the object
+		t_max:	the maximum valid distance for an intersection
+		*rec:	the hit_record to populate on a successful hit
+	Return 1 if the object was hit, 0 otherwise
+
+	This function acts as a router.
+	Checks the `type` of the object and calls the appropriate `hit_...` function
+*/
+int	hit_object(t_object *obj, t_ray *ray, double t_max, t_hit_record *rec)
+{
+	int	hit;
+
+	hit = 0;
+	if (obj->type == SPHERE)
+		hit = hit_sphere(obj->shape_data, ray, t_max, rec);
+	else if (obj->type == PLANE)
+		hit = hit_plane(obj->shape_data, ray, t_max, rec);
+	else if (obj->type == CYLINDER)
+		hit = hit_cylinker(obj->shape_data, ray, t_max, rec);
+	if (hit)
+		rec->color = obj->color;
+	return (hit);
+}
