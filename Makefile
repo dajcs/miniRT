@@ -6,7 +6,7 @@
 #    By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/02 13:34:30 by anemet            #+#    #+#              #
-#    Updated: 2025/10/03 10:11:22 by anemet           ###   ########.fr        #
+#    Updated: 2025/10/04 20:09:57 by anemet           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,26 +37,17 @@ SRCS_WINDOW = src/window/window.c \
 SRCS_MATH = src/math/vec3_ops1.c \
 				src/math/vec3_ops2.c \
 
-SRCS_RENDER = src/render/render.c \
-				src/render/ray.c \
-				src/render/intersections.c \
-				src/render/intersect_sphere.c \
-				src/render/intersect_plane.c \
-				src/render/intersect_cylinder.c \
-				src/render/intersect_cone.c \
-				src/render/lighting.c \
-				src/render/shadows.c \
-				src/render/colors.c \
+SRCS_RENDER = src/render/renderer.c \
 				src/render/camera.c \
-				src/render/camera_utils.c \
-				src/render/scene_objects.c
+				src/render/intersections.c \
+				src/render/lighting.c
 
 # Test-specific files
-SRCS_TEST = src/main.c \
-            src/render/mock_render.c
+# SRCS_TEST = src/main.c \
+#             src/render/mock_render.c
 
 # Combine all source files
-SRCS = $(SRCS_PARSER) $(SRCS_WINDOW) $(SRCS_TEST)
+SRCS = $(SRCS_PARSER) $(SRCS_WINDOW) $(SRCS_RENDER) $(SRCS_MATH) src/main.c
 
 # Object files
 OBJS = $(SRCS:.c=.o)

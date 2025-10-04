@@ -6,14 +6,14 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 14:53:51 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/02 15:08:30 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/04 07:47:46 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
 // Dispatcher to call the correct parser based on the element identifier
-static int	parse_line(char *line, t_scene *scene)
+int	parse_line(char *line, t_scene *scene)
 {
 	char	**tokens;
 	int		result;
@@ -43,7 +43,7 @@ static int	parse_line(char *line, t_scene *scene)
 }
 
 // Initialize the scene struct with default values
-static void	init_scene(t_scene *scene)
+void	init_scene(t_scene *scene)
 {
 	scene->width = 1280;
 	scene->height = 720;
@@ -59,7 +59,7 @@ static void	init_scene(t_scene *scene)
 // Reads the file line by line and calls parser for each line
 // ignore empty lines and # comments
 // Returns 1 on success, 0 on parsing error
-static int	read_and_parse_file(int fd, t_scene *scene)
+int	read_and_parse_file(int fd, t_scene *scene)
 {
 	char	*line;
 	int		status;

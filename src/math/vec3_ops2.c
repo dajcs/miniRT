@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 19:51:42 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/02 20:05:28 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/04 19:28:28 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,5 +60,20 @@ t_vec3	vec3_cross(t_vec3 v1, t_vec3 v2)
 	result.x = v1.y * v2.z - v1.z * v2.y;
 	result.y = v1.z * v2.x - v1.x * v2.z;
 	result.z = v1.x * v2.y - v1.y * v2.x;
+	return (result);
+}
+
+/* vec3_mulxyz()
+	Component-wise multiplication of two vectors.
+	The result is a t_vec3.
+	v_new = v1 x v2
+*/
+t_vec3	vec3_mulxyz(t_vec3 v1, t_vec3 v2)
+{
+	t_vec3	result;
+
+	result.x = v1.x * v2.x;
+	result.y = v1.y * v2.y;
+	result.z = v1.z * v2.z;
 	return (result);
 }

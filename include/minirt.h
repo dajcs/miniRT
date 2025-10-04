@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/03 21:00:14 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/04 19:27:40 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,15 @@ typedef struct s_program_data
 	t_mlx_data		*mlx;
 }					t_program_data;
 
-// grep -E '^[^[:space:]/#{}*][^()]*\('  *.c
+/*
+
+grep c functions:
+- doesn't start with blank or comment or {}
+- has an opening (
+
+grep -E '^[^[:blank:]/#{}*][^()]*\('  *.c
+
+*/
 
 /*
 	########### Parser Module ##############
@@ -166,6 +174,9 @@ typedef struct s_program_data
 int					error_msg(char *message);
 
 /* --- parser.c --- */
+int					parse_line(char *line, t_scene *scene);
+void				init_scene(t_scene *scene);
+int					read_and_parse_file(int fd, t_scene *scene);
 t_scene				*parse_scene(const char *filename);
 void				free_scene(t_scene *scene);
 
@@ -227,13 +238,34 @@ double				vec3_length_squared(t_vec3 v);
 double				vec3_length(t_vec3 v);
 t_vec3				vec3_normalize(t_vec3 v);
 t_vec3				vec3_cross(t_vec3 v1, t_vec3 v2);
+t_vec3				vec3_mulxyz(t_vec3 v1, t_vec3 v2);
 
 /*
 	############## Render Module ###################
 */
 
-/* --- ray.c --- */
-t_ray				create_ray(t_point3 origin, t_vec3 direction);
-t_point3			ray_at(t_ray r, double t);
+/* --- camera.c --- */
+void				setup_camera(t_camera *cam, int img_width, int img_height);
+t_ray				get_ray(t_camera *cam, int x, int y);
+
+/* --- intersections.c --- */
+int					hit_sphere(t_sphere *sp, t_ray *ray, double t_max,
+						t_hit_record *rec);
+int					hit_plane(t_plane *pl, t_ray *ray, double t_max,
+						t_hit_record *rec);
+int					hit_cylinder(t_cylinder *cy, t_ray *ray, double t_max,
+						t_hit_record *rec);
+int					hit_object(t_object *obj, t_ray *ray, double t_max,
+						t_hit_record *rec);
+
+/* --- ligthting.c --- */
+int					is_in_shadow(t_point3 hit_point, t_light *light,
+						t_scene *scene);
+t_color				calculate_lighting(t_hit_record *rec, t_scene *scene);
+
+/* --- renderer.c --- */
+int					color_to_int(t_color color);
+t_color				ray_color(t_ray *ray, t_scene *scene);
+void				render(t_scene *scene, t_mlx_data *mlx);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 18:40:52 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/03 21:21:26 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/04 19:36:50 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,20 +71,20 @@ int	hit_sphere(t_sphere *sp, t_ray *ray, double t_max, t_hit_record *rec)
 
 // TODO: Student B - Implement Plane Intersection
 /*
-B. Plane Intersection
+	B. Plane Intersection
 
-Equation: A point P is on a plane defined by a point P₀ on the plane
-and a normal vector n if the vector from P₀ to P is perpendicular to n.
-Mathematically: (P - P₀) · n = 0.
+	Equation: A point P is on a plane defined by a point P₀ on the plane
+	and a normal vector n if the vector from P₀ to P is perpendicular to n.
+	Mathematically: (P - P₀) · n = 0.
 
-How to Solve:
-1. Substitute the ray equation P(t): (O + tD - P₀) · n = 0.
-2. This is a simple linear equation. Solve for t:
-	t = ((P₀ - O) · n) / (D · n)
-3. Edge Case: If the denominator (D · n) is zero, the ray is parallel
-	to the plane and will never intersect (or is inside the plane,
-	which can be ignored).
-4. If a t > 0 exists, that's the intersection distance.
+	How to Solve:
+	1. Substitute the ray equation P(t): (O + tD - P₀) · n = 0.
+	2. This is a simple linear equation. Solve for t:
+		t = ((P₀ - O) · n) / (D · n)
+	3. Edge Case: If the denominator (D · n) is zero, the ray is parallel
+		to the plane and will never intersect (or is inside the plane,
+		which can be ignored).
+	4. If a t > 0 exists, that's the intersection distance.
 */
 	// Formula: t = ((P₀ - O) · n) / (D · n)
 	// 1. Check if denominator (D · n) is close to zero (ray is parallel).
@@ -93,6 +93,10 @@ How to Solve:
 	// 4. If so, populate the hit record. The normal is just pl->normal.
 int	hit_plane(t_plane *pl, t_ray *ray, double t_max, t_hit_record *rec)
 {
+	(void)pl;
+	(void)ray;
+	(void)t_max;
+	(void)rec;
 	return (0);
 }
 
@@ -105,6 +109,10 @@ int	hit_plane(t_plane *pl, t_ray *ray, double t_max, t_hit_record *rec)
 	// 4. Return the closest valid intersection.
 int	hit_cylinder(t_cylinder *cy, t_ray *ray, double t_max, t_hit_record *rec)
 {
+	(void)cy;
+	(void)ray;
+	(void)t_max;
+	(void)rec;
 	return (0);
 }
 
@@ -130,7 +138,7 @@ int	hit_object(t_object *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	else if (obj->type == PLANE)
 		hit = hit_plane(obj->shape_data, ray, t_max, rec);
 	else if (obj->type == CYLINDER)
-		hit = hit_cylinker(obj->shape_data, ray, t_max, rec);
+		hit = hit_cylinder(obj->shape_data, ray, t_max, rec);
 	if (hit)
 		rec->color = obj->color;
 	return (hit);
