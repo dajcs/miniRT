@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 15:12:50 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/02 15:17:11 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/05 16:16:39 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ int	validate_fov(double fov)
 	return (fov > 0 && fov < 180);
 }
 
-/* validate_normalized_vector()
+/* validate_norm_vec3()
 	Validates that a vector is normalized (i.e., has a length of 1)
 	within a small epsilon to account for floating-point precision
 */
-int	validate_normalized_vector(t_vec3 vec)
+int	validate_norm_vec3(t_vec3 vec)
 {
 	double			length;
 	const double	epsilon = 1e-6;

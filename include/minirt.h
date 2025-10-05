@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/04 19:27:40 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/05 16:16:39 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,7 +202,7 @@ int					parse_double(char *str, double *val);
 /* --- parser_validation.c --- */
 int					validate_ratio(double ratio);
 int					validate_fov(double fov);
-int					validate_normalized_vector(t_vec3 vec);
+int					validate_norm_vec3(t_vec3 vec);
 
 /*
 	############## Window Module ###################

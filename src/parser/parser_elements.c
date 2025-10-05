@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 13:24:03 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/03 16:21:52 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/05 16:16:39 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	parse_camera(char **tokens, t_scene *scene)
 	if (!parse_vec3(tokens[1], &origin))
 		return (error_msg("Camera: invalid origin coordinates"));
 	if (!parse_vec3(tokens[2], &orientation)
-		|| !validate_normalized_vector(orientation))
+		|| !validate_norm_vec3(orientation))
 		return (error_msg("Camera: invalid orientation vector"));
 	if (!parse_double(tokens[3], &fov) || !validate_fov(fov))
 		return (error_msg("Camera: invalid FOV"));
