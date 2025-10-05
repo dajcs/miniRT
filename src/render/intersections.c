@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 18:40:52 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/04 19:36:50 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/05 14:46:34 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,16 +69,17 @@ int	hit_sphere(t_sphere *sp, t_ray *ray, double t_max, t_hit_record *rec)
 	return (1);
 }
 
-// TODO: Student B - Implement Plane Intersection
-/*
-	B. Plane Intersection
+/* hit_plane()
+	Tests for a ray-plane intersection.
+	Input:
+		*pl:	the plane object, containing a point P₀ and a normal vector n
 
 	Equation: A point P is on a plane defined by a point P₀ on the plane
 	and a normal vector n if the vector from P₀ to P is perpendicular to n.
 	Mathematically: (P - P₀) · n = 0.
 
 	How to Solve:
-	1. Substitute the ray equation P(t): (O + tD - P₀) · n = 0.
+	1. Substitute the ray equation P(t): (O + Dt - P₀) · n = 0.
 	2. This is a simple linear equation. Solve for t:
 		t = ((P₀ - O) · n) / (D · n)
 	3. Edge Case: If the denominator (D · n) is zero, the ray is parallel
@@ -86,27 +87,55 @@ int	hit_sphere(t_sphere *sp, t_ray *ray, double t_max, t_hit_record *rec)
 		which can be ignored).
 	4. If a t > 0 exists, that's the intersection distance.
 */
-	// Formula: t = ((P₀ - O) · n) / (D · n)
-	// 1. Check if denominator (D · n) is close to zero (ray is parallel).
-	// 2. Calculate t.
-	// 3. Check if t is within the valid range [0.001, t_max].
-	// 4. If so, populate the hit record. The normal is just pl->normal.
+/*
+	Formula: t = ((P₀ - O) · n) / (D · n)
+	Where:
+		P₀: is a point on the plane (pl->point)
+		O : is the ray's origin (ray->origin)
+		n : is the plane's normal vector (pl->normal)
+		D : is the ray's direction (ray->direction)
+	1. Check if denominator (D · n) is close to zero (ray is parallel).
+		(the denominator is the cosine of the angle between the ray and n)
+		if denominator ~ 0 => no hit, return 0
+	2. Calculate the numerator = numerator: ((P₀ - O) · n)
+	3. Calculate t = numerator / denominator.
+	4. If t is outside the valid range [0.001, t_max], return 0
+		t > 0.001: The hit must be in front of the ray's origin. The small
+						epsilon prevents "shadow acne" or self-intersection
+		t < t_max: The hit must be closer than any other object already found
+	5. A valid intersection was found, we can populate the hit record
+	6. Ensure the normal points against the incident ray.
+		If the ray hits the "back" of the plane, flip the hit record normal
+*/
 int	hit_plane(t_plane *pl, t_ray *ray, double t_max, t_hit_record *rec)
 {
-	(void)pl;
-	(void)ray;
-	(void)t_max;
-	(void)rec;
+	double	denominator;
+	double	numerator;
+	double	t;
+
+	denominator = vec3_dot(ray->direction, pl->normal);
+	if (fabs(denominator) < 1e-6)
+		return (0);
+	numerator = vec3_dot(vec3_sub(pl->point, ray->origin), pl->normal);
 	return (0);
+	t = numerator / denominator;
+	if (t <= 0.001 || t >= t_max)
+		return (0);
+	rec->t = t;
+	rec->p = vec3_add(ray->origin, vec3_mul(ray->direction, t));
+	rec->normal = pl->normal;
+	if (vec3_dot(ray->direction, rec->normal) > 0.0)
+		rec->normal = vec3_mul(rec->normal, -1);
+	return (1);
 }
 
 // TODO: Student B - Implement Cylinder Intersection
-	// This is the most complex intersection.
-	// 1. Solve a quadratic equation for the infinite cylinder wall.
-	// 2. Check if the hit points are within the cylinder's height bounds.
-	// 3. Check for intersections with the top and bottom caps
-			// (which are planes).
-	// 4. Return the closest valid intersection.
+// This is the most complex intersection.
+// 1. Solve a quadratic equation for the infinite cylinder wall.
+// 2. Check if the hit points are within the cylinder's height bounds.
+// 3. Check for intersections with the top and bottom caps
+// (which are planes).
+// 4. Return the closest valid intersection.
 int	hit_cylinder(t_cylinder *cy, t_ray *ray, double t_max, t_hit_record *rec)
 {
 	(void)cy;
