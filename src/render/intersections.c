@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 18:40:52 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/05 14:46:34 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/05 15:27:00 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int	hit_sphere(t_sphere *sp, t_ray *ray, double t_max, t_hit_record *rec)
 	1. Check if denominator (D · n) is close to zero (ray is parallel).
 		(the denominator is the cosine of the angle between the ray and n)
 		if denominator ~ 0 => no hit, return 0
-	2. Calculate the numerator = numerator: ((P₀ - O) · n)
+	2. Calculate the numerator = ((P₀ - O) · n)
 	3. Calculate t = numerator / denominator.
 	4. If t is outside the valid range [0.001, t_max], return 0
 		t > 0.001: The hit must be in front of the ray's origin. The small
@@ -117,7 +117,6 @@ int	hit_plane(t_plane *pl, t_ray *ray, double t_max, t_hit_record *rec)
 	if (fabs(denominator) < 1e-6)
 		return (0);
 	numerator = vec3_dot(vec3_sub(pl->point, ray->origin), pl->normal);
-	return (0);
 	t = numerator / denominator;
 	if (t <= 0.001 || t >= t_max)
 		return (0);
