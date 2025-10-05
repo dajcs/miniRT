@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/05 16:16:39 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/05 21:40:14 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,29 @@ typedef struct s_hit_record
 								// the normal when hit from inside instead
 }					t_hit_record;
 
+// A helper struct to hold the coefficients of the quadratic equation
+// This helps to be within the norminette 4-parameter / 5-variable limit
+typedef struct s_quadratic
+{
+	double			a;
+	double			b;
+	double			c;
+	double			discriminant;
+	double			t1;
+	double			t2;
+}					t_quadratic;
+
+// A struct to hold information about a potential (cylinder) intersection.
+// It is used to pass hit data back from helper functions
+typedef struct s_hit_info
+{
+	int				hit;	// set to 1 if valid intersection has been found
+	double			hit_t;	// using hit_t to track the closest hit so far
+	double			t;		// t value of a **potential** new intersection
+	t_point3		p;		// the calc.3D point of a potential intersesection
+	t_vec3			normal; // stores the calculated normal at the pot.inters.
+}					t_hit_info;
+
 // --- Window management ---
 
 // Holds all data related to the MiniLibX window and image buffer
@@ -187,9 +210,7 @@ int					parse_light(char **tokens, t_scene *scene);
 int					parse_sphere(char **tokens, t_scene *scene);
 
 /* --- parser_element2.c --- */
-// TODO: parse_plane()
 int					parse_plane(char **tokens, t_scene *scene);
-// TODO: parse_cylinder()
 int					parse_cylinder(char **tokens, t_scene *scene);
 
 /* --- parser_utils.c --- */
@@ -247,6 +268,15 @@ t_vec3				vec3_mulxyz(t_vec3 v1, t_vec3 v2);
 /* --- camera.c --- */
 void				setup_camera(t_camera *cam, int img_width, int img_height);
 t_ray				get_ray(t_camera *cam, int x, int y);
+
+/* --- cylinder_intersect.c --- */
+void				get_wall_normal(t_cylinder *cy, t_hit_info *info);
+int					check_wall_hit(t_cylinder *cy, t_ray *ray,
+						t_hit_info *info);
+int					intersect_cylinder_wall(t_cylinder *cy, t_ray *r,
+						t_hit_info *info);
+int					intersect_cylinder_caps(t_cylinder *cy, t_ray *r,
+						t_hit_info *info);
 
 /* --- intersections.c --- */
 int					hit_sphere(t_sphere *sp, t_ray *ray, double t_max,

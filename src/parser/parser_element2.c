@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 14:26:45 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/05 16:32:43 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/05 21:36:14 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ int	parse_plane(char **tokens, t_scene *scene)
 	return (1);
 }
 
-// TODO: Implementation of parse_cylinder like parse_sphere()
 // Parses Cylinder: cy <x,y,z> <nx,ny,nz> <diameter> <height> <R,G,B>
 int	parse_cylinder(char **tokens, t_scene *scene)
 {
@@ -54,7 +53,7 @@ int	parse_cylinder(char **tokens, t_scene *scene)
 		return (error_msg("Cylinder: invalid center coordinates"));
 	if (!parse_vec3(tokens[2], &cy->axis) || !validate_norm_vec3(cy->axis))
 		return (error_msg("Cylinder: invalid orientation vector"));
-	if (!parse_double(tokens[3], &cy->diameter || cy->diameter <= 0.0))
+	if (!parse_double(tokens[3], &cy->diameter) || cy->diameter <= 0.0)
 		return (error_msg("Cylinder: invalid diameter"));
 	if (!parse_double(tokens[4], &cy->height) || cy->height <= 0.0)
 		return (error_msg("Cylinder: invalid height"));

@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 18:40:52 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/05 15:27:00 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/05 21:31:28 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,19 +128,40 @@ int	hit_plane(t_plane *pl, t_ray *ray, double t_max, t_hit_record *rec)
 	return (1);
 }
 
-// TODO: Student B - Implement Cylinder Intersection
-// This is the most complex intersection.
-// 1. Solve a quadratic equation for the infinite cylinder wall.
-// 2. Check if the hit points are within the cylinder's height bounds.
-// 3. Check for intersections with the top and bottom caps
-// (which are planes).
-// 4. Return the closest valid intersection.
+/* hit_cylinder()
+	The main entry point for ray-cylinder intersection test
+	Input:
+		*cy:	t_cylinder, the cylinder object
+		*ray:	t_ray, the ray to test
+		t_max:	the maximum distance for a valid intersection
+		*rec:	t_hit_record, the hit_record to populate on closest valid hit
+	Return 1 if the cylinder was hit, 0 otherwise
+
+	The function orchestrates the cylinder intersection process.
+	It keeps track of potential new hits with cylinder in info (t_hit_info)
+	Starts by setting info.hit = 0 (no valid hit with cylinder yet) and
+	info.hit_t = t_max // using hit_t to track the closest hit so far
+	It first checks for hits on the infinite wall, then on the end caps.
+	It keeps track of the closest valid intersection found and, if any hit
+	occured, it populates the final hit_record with the t_hit_info values.
+*/
 int	hit_cylinder(t_cylinder *cy, t_ray *ray, double t_max, t_hit_record *rec)
 {
-	(void)cy;
-	(void)ray;
-	(void)t_max;
-	(void)rec;
+	t_hit_info	info;
+
+	info.hit = 0;
+	info.hit_t = t_max;
+	intersect_cylinder_wall(cy, ray, &info);
+	intersect_cylinder_caps(cy, ray, &info);
+	if (info.hit)
+	{
+		rec->t = info.t;
+		rec->p = info.p;
+		rec->normal = info.normal;
+		if (vec3_dot(ray->direction, rec->normal) > 0.0)
+			rec->normal = vec3_mul(rec->normal, -1);
+		return (1);
+	}
 	return (0);
 }
 
