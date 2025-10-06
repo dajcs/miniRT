@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 17:19:51 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/05 21:15:57 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/05 23:12:04 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,10 +109,10 @@ int	intersect_cylinder_wall(t_cylinder *cy, t_ray *r, t_hit_info *info)
 	if (q.discriminant < 0)
 		return (0);
 	q.t1 = (-q.b - sqrt(q.discriminant)) / (2 * q.a);
-	q.t2 = (-q.b + sqrt(q.discriminant)) / (2 * q.a);
 	info->t = q.t1;
 	if (info->t > 0.001 && info->t < info->hit_t && check_wall_hit(cy, r, info))
 		return (1);
+	q.t2 = (-q.b + sqrt(q.discriminant)) / (2 * q.a);
 	info->t = q.t2;
 	if (info->t > 0.001 && info->t < info->hit_t && check_wall_hit(cy, r, info))
 		return (1);
@@ -132,26 +132,79 @@ int	intersect_cylinder_wall(t_cylinder *cy, t_ray *r, t_hit_info *info)
 	is withing the circle's radius. It pudates the hit_info struct if a closer
 	intersection is found on either cap.
 */
+// int	intersect_cylinder_caps(t_cylinder *cy, t_ray *r, t_hit_info *info)
+// {
+// 	t_plane			cap;
+// 	t_hit_record	temp_rec;
+// 	int				hit_found;
+
+// 	hit_found = 0;
+// 	cap.point = cy->center;
+// 	cap.normal = vec3_mul(cy->axis, -1);
+// 	if (hit_plane(&cap, r, info->hit_t, &temp_rec))
+// 	{
+// 		if (vec3_length_squared(vec3_sub(temp_rec.p,
+// 					cap.point)) <= pow(cy->diameter / 2.0, 2))
+// 		{
+// 			info->hit_t = temp_rec.t;
+// 			info->t = temp_rec.t;
+// 			info->p = temp_rec.p;
+// 			info->normal = temp_rec.normal;
+// 			hit_found = 1;
+// 		}
+// 	}
+// 	cap.point = vec3_add(cy->center, vec3_mul(cy->axis, cy->height));
+// 	cap.normal = cy->axis;
+// 	if (hit_plane(&cap, r, info->hit_t, &temp_rec))
+// 	{
+// 		if (vec3_length_squared(vec3_sub(temp_rec.p,
+// 					cap.point)) <= pow(cy->diameter / 2.0, 2))
+// 		{
+// 			info->hit_t = temp_rec.t;
+// 			info->t = temp_rec.t;
+// 			info->p = temp_rec.p;
+// 			info->normal = temp_rec.normal;
+// 			hit_found = 1;
+// 		}
+// 	}
+// 	return (hit_found);
+// }
+
+
 int	intersect_cylinder_caps(t_cylinder *cy, t_ray *r, t_hit_info *info)
 {
-	t_plane	cap;
-	double	dist_sq;
+	t_plane			cap;
+	t_hit_record	temp_rec; // Use the CORRECT type
+	int				hit_found;
 
+	hit_found = 0;
+	// Bottom cap
 	cap.point = cy->center;
 	cap.normal = vec3_mul(cy->axis, -1);
-	if (hit_plane(&cap, r, info->hit_t, (void *)info) && info->t < info->hit_t)
+	if (hit_plane(&cap, r, info->hit_t, &temp_rec)) // Pass the correct type
 	{
-		dist_sq = vec3_length_squared(vec3_sub(info->p, cy->center));
-		if (dist_sq <= pow(cy->diameter / 2.0, 2))
-			info->hit = 1;
+		if (vec3_length_squared(vec3_sub(temp_rec.p, cy->center)) <= pow(cy->diameter / 2.0, 2))
+		{
+			info->hit_t = temp_rec.t; // Update closest hit distance
+			info->t = temp_rec.t;
+			info->p = temp_rec.p;
+			info->normal = temp_rec.normal;
+			hit_found = 1;
+		}
 	}
+	// Top cap
 	cap.point = vec3_add(cy->center, vec3_mul(cy->axis, cy->height));
 	cap.normal = cy->axis;
-	if (hit_plane(&cap, r, info->hit_t, (void *)info) && info->t < info->hit_t)
+	if (hit_plane(&cap, r, info->hit_t, &temp_rec)) // Pass the correct type
 	{
-		dist_sq = vec3_length_squared(vec3_sub(info->p, cap.point));
-		if (dist_sq <= pow(cy->diameter / 2.0, 2))
-			info->hit = 1;
+		if (vec3_length_squared(vec3_sub(temp_rec.p, cap.point)) <= pow(cy->diameter / 2.0, 2))
+		{
+			info->hit_t = temp_rec.t;
+			info->t = temp_rec.t;
+			info->p = temp_rec.p;
+			info->normal = temp_rec.normal;
+			hit_found = 1;
+		}
 	}
-	return (info->hit);
+	return (hit_found);
 }

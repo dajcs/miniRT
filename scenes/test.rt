@@ -1,0 +1,25 @@
+# shadow_test.rt
+# A scene designed to test shadows cast by a sphere and a cylinder.
+
+# A: Ambient light. Low intensity to make shadows noticeable but not pure black.
+A   0.2    255,255,255
+
+# C: Camera. Positioned far back at z=-50, looking straight ahead.
+C   0,0,-50     0,0,1      70
+
+# L: Light source. Positioned high up (y=20) and to the left/front (x=-20, z=0).
+# This will cast shadows diagonally down and to the right/back.
+L   -20,20,0    0.8        255,255,255
+
+# pl: A large green plane acting as the "floor" to receive the shadows.
+# It is positioned at y=-10, with its normal vector pointing straight up.
+pl  0,-10,0     0,1,0      0,255,0
+
+# sp: A red sphere. Its center is at y=0, so it floats 10 units above the plane.
+# It is positioned directly in front of the camera at z=20.
+sp  0,-10,20      20         255,0,0
+
+# cy: A blue cylinder. It is placed off to the right and further back.
+# Its center is at y=0, making it float above the plane as well.
+# Its axis is (0,1,0), so it is standing upright.
+cy  25,-10,30     0,1,0      14    20.0     0,0,255

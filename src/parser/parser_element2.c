@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 14:26:45 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/05 21:36:14 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/05 23:30:42 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	parse_plane(char **tokens, t_scene *scene)
 	return (1);
 }
 
-// Parses Cylinder: cy <x,y,z> <nx,ny,nz> <diameter> <height> <R,G,B>
+// Parses Cylinder: cy <x,y,z> <ax,ay,az> <diameter> <height> <R,G,B>
 int	parse_cylinder(char **tokens, t_scene *scene)
 {
 	t_object	*obj;
