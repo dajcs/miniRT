@@ -21,7 +21,7 @@
 #      L    <x,y,z>     <ratio>     <R,G,B> (Color is ignored for mandatory part)
 
 #  - **Light** 2
-#       L	50,40,40	0.5	        10,0,255
+        L	50,40,40	0.5	        10,0,255
 #      L    <x,y,z>     <ratio>     <R,G,B> (Color is ignored for mandatory part)
 
 #  - **Sphere**
@@ -33,5 +33,5 @@
 #      pl   <x,y,z>     <nx,ny,nz>  <R,G,B>
 
 #  - **Cylinder**
-       cy	0,2,5	0,1,0        10	        6	        0,0,255
+       cy	0,0,10	0,1,0        10	        10	        0,0,255
 #      cy   <x,y,z> <ax,ay,az>   <diameter> <height>    <R,G,B>

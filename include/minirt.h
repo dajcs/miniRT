@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/06 15:23:09 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/06 20:16:46 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,6 +276,8 @@ int					check_wall_hit(t_cylinder *cy, t_ray *ray,
 						t_hit_info *info);
 int					intersect_cylinder_wall(t_cylinder *cy, t_ray *r,
 						t_hit_info *info);
+int					check_single_cap(t_cylinder *cy, t_ray *r, t_hit_info *info,
+						t_plane *cap);
 int					intersect_cylinder_caps(t_cylinder *cy, t_ray *r,
 						t_hit_info *info);
 
