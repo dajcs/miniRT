@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 14:26:45 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/05 23:30:42 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/06 15:58:10 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,6 @@ int	parse_cylinder(char **tokens, t_scene *scene)
 	obj->shape_data = cy;
 	obj->next = scene->objects;
 	scene->objects = obj;
+	cy->center = vec3_add(cy->center, vec3_mul(cy->axis, -cy->height / 2.0));
 	return (1);
 }

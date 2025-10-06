@@ -9,8 +9,12 @@ miniRT (mini Ray-Tracing) project @ school 42
 - Distributed Ray Tracing
 
 - [Ray Tracing in 2 minutes](https://www.youtube.com/watch?v=oCsgTrGLDiI)
-- [Coding Adenture: Ray Tracing](https://www.youtube.com/watch?v=Qz0KTGYJtUk)
-- [Coding Adventure: More Ray Tracing](https://www.youtube.com/watch?v=C1H4zIiCOaI)
+- [Ray Tracing in One Weekend (book)](https://raytracing.github.io/books/RayTracingInOneWeekend.html)
+- [Ray Tracing: The Next Week (book)](https://raytracing.github.io/books/RayTracingTheNextWeek.html)
+- [Ray Tracing: The Rest of Your Life (book)](https://raytracing.github.io/books/RayTracingTheRestOfYourLife.html)
+- [Building a miniRT — 42 Project Part 1 (medium)](https://medium.com/@iremoztimur/building-a-minirt-42-project-part-1-ae7a00aebdb9)
+- [Building a miniRT — 42 Project Part 2 (medium)](https://medium.com/@iremoztimur/minirt-shading-algorithms-part-2-6c46e6d81fbd)
+- [Raycasting Algorithms Part 1](https://www.youtube.com/watch?v=ebzlMOw79Yw)
 <!---
 - [Computerphile: Recursive Ray Tracing](https://www.youtube.com/watch?v=nOCPpT-Sn0A)
 - [Computerphile: Path Tracing](https://www.youtube.com/watch?v=3OKj0SQ_UTw)

@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 13:24:03 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/05 16:16:39 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/06 08:59:21 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	parse_light(char **tokens, t_scene *scene)
 	return (1);
 }
 
-// Parses Sphere: sp <x,y,z> <diameter> <R,G,B> // TODO: <R,G,B> for bonus part
+// Parses Sphere: sp <x,y,z> <diameter> <R,G,B> 
 int	parse_sphere(char **tokens, t_scene *scene)
 {
 	t_object	*obj;

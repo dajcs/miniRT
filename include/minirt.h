@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/05 21:40:14 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/06 15:23:09 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ typedef struct s_light
 {
 	t_point3		position; // Parsed 'L' coordinates
 	double			ratio;	// Light brightness ratio (0.0 - 1.0)
-	t_color			color;	// Parsed 'L' color (0-255 range)
+	t_color			color;	// Parsed 'L' color (0-255 range), used at bonus
 	struct s_light	*next;
 }					t_light;
 
@@ -130,7 +130,8 @@ typedef struct s_hit_record
 	t_vec3			normal;	// Surface normal at the intersection
 	t_color			color;	// Color of the object hit
 	double			t;		// 'time' or distance along the ray
-	// int				front_face;	// 1 if ray hits from outside, 0 when
+	// t_object		*obj;	// The object that was hit
+	// int			front_face;	// 1 if ray hits from outside, 0 when
 								// hitting from inside. Alternatively we flip
 								// the normal when hit from inside instead
 }					t_hit_record;
