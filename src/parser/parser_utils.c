@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 23:35:03 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/01 00:04:51 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/07 15:54:08 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,9 @@ int	parse_vec3(char *str, t_vec3 *vec)
 		free_tokens(parts);
 		return (0);
 	}
-	vec->x = atof(parts[0]);
-	vec->y = atof(parts[1]);
-	vec->z = atof(parts[2]);
+	vec->x = ft_atof(parts[0]);
+	vec->y = ft_atof(parts[1]);
+	vec->z = ft_atof(parts[2]);
 	free_tokens(parts);
 	return (1);
 }
@@ -87,6 +87,6 @@ int	parse_vec3(char *str, t_vec3 *vec)
 // A more robust implementation could check for invalid characters
 int	parse_double(char *str, double *val)
 {
-	*val = atof(str);
+	*val = ft_atof(str);
 	return (1);
 }

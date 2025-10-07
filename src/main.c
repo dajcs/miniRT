@@ -6,14 +6,11 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 10:35:00 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/02 15:34:51 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/07 14:10:51 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-
-// Forward declaration for the renderer function
-void	render(t_scene *scene, t_mlx_data *mlx);
 
 int	main(int argc, char **argv)
 {

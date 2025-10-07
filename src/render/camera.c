@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 10:52:00 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/03 16:52:34 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/07 15:35:17 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,19 @@
 	Input: t_camera *cam, int img_width, int img_height
 	Return: void, sets camera parameters in place
 
+	This function builds a correct orthonormal basis (u,v,w) for the camera's
+	orientation.
+		'w' is the vector opposite the viewing direction
+		'u' is the vector pointing to the camera's right
+		'v' is the vector pointing up
+	It handles the edge case where the camera looks strainght up or down.
+	Based on the u,v,w it calculates the vewport vectors and the precise
+	3D location of the center of the top-left pixel (pixel00_loc).
+
 	1. Setup the camera's orthonormal basis: u, v, w
-		cam->w = normalize(lookfrom - lookat);
-		cam->u = normalize(cross(up, w)); // up = t_vec3{0, 1 , 0}
+		cam->w = -cam->orientation;
+		set world_up (considering the edge case)
+		cam->u = normalize(cross(world_up, w));
 		cam->v = cross(w, u);
 	2. Calculate viewport dimensions: viewport_width, viewport_height for a
 		pinhole camera at distance focal_length = 1.0
@@ -37,9 +47,13 @@
 void	setup_camera(t_camera *cam, int img_width, int img_height)
 {
 	t_point3	viewport_upper_left;
+	t_vec3		world_up;
 
-	cam->w = vec3_normalize(vec3_sub(cam->origin, cam->orientation));
-	cam->u = vec3_normalize(vec3_cross((t_vec3){0, 1, 0}, cam->w));
+	cam->w = vec3_mul(cam->orientation, -1);
+	world_up = (t_vec3){0, 1, 0};
+	if (fabs(cam->w.x) < 1e-6 && fabs(cam->w.z) < 1e-6)
+		world_up = (t_vec3){0, 0, 1};
+	cam->u = vec3_normalize(vec3_cross(world_up, cam->w));
 	cam->v = vec3_cross(cam->w, cam->u);
 	cam->viewport_width = 2.0 * tan((cam->fov * M_PI / 180.0) / 2.0) * 1.0;
 	cam->viewport_height = cam->viewport_width * ((double)img_height

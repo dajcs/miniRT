@@ -13,7 +13,7 @@
 #      +Z (Towards you)
 #
 #    - **Camera**
-       C	20,15,50    	0,-0.19611613513818402,-0.9805806756909201  	70
+       C	20,20,70    	0,0,-1  	70
 #      C      <x,y,z>       <nx,ny,nz>  <fov>
 
 #  - **Light** 1
@@ -25,7 +25,7 @@
 #      L    <x,y,z>     <ratio>     <R,G,B> (Color is ignored for mandatory part)
 
 #  - **Sphere**
-       sp	22,5,0	    10      	255,0,0
+       sp	12,5,0	    180      	255,0,0
 #      sp   <x,y,z>     <diameter>  <R,G,B>
 
 #  - **Plane**
@@ -33,5 +33,5 @@
 #      pl   <x,y,z>     <nx,ny,nz>  <R,G,B>
 
 #  - **Cylinder**
-       cy	10,0,10	0,1,0        10	        5	        0,0,255
+       cy	0,0,10	0,1,0        10	        10	        0,0,255
 #      cy   <x,y,z> <ax,ay,az>   <diameter> <height>    <R,G,B>
