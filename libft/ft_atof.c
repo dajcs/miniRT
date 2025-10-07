@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 14:31:05 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/03 06:47:08 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/07 20:55:12 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,20 @@
 
 static double	parse_fractional(const char **nptr)
 {
-	double	frac;
-	int		frac_div;
+	long long	frac;
+	long long	frac_div;
 
-	frac = 0.0;
+	frac = 0;
 	frac_div = 1;
 	if (**nptr == '.')
 		(*nptr)++;
 	while (**nptr >= '0' && **nptr <= '9')
 	{
-		frac = frac * 10.0 + (**nptr - '0');
+		frac = frac * 10 + (**nptr - '0');
 		(*nptr)++;
 		frac_div *= 10;
 	}
-	return (frac / frac_div);
+	return (frac / (double)frac_div);
 }
 
 double	ft_atof(const char *nptr)
