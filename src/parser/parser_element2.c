@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 14:26:45 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/06 16:52:57 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/08 13:10:09 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,16 @@ int	parse_plane(char **tokens, t_scene *scene)
 	t_object	*obj;
 	t_plane		*pl;
 
-	if (count_tokens(tokens) != 4)
+	if (count_tokens(tokens) < 4)
 		return (error_msg("Plane: requires 3 parameters"));
 	obj = malloc(sizeof(t_object));
 	pl = malloc(sizeof(t_plane));
 	if (!obj || !pl)
 		return (error_msg("Plane: memory allocation failed"));
-	if (!parse_vec3(tokens[1], &pl->point))
+	if (!parse_vec3(tokens[1], &pl->point, 0))
 		return (error_msg("Plane: invalid point coordinates"));
-	if (!parse_vec3(tokens[2], &pl->normal) || !validate_norm_vec3(pl->normal))
+	if (!parse_vec3(tokens[2], &pl->normal, 1)
+		|| !validate_norm_vec3(pl->normal))
 		return (error_msg("Plane: invalid normal vector"));
 	if (!parse_color(tokens[3], &obj->color))
 		return (error_msg("Plane: invalid color format"));
@@ -46,15 +47,15 @@ int	parse_cylinder(char **tokens, t_scene *scene)
 	t_object	*obj;
 	t_cylinder	*cy;
 
-	if (count_tokens(tokens) != 6)
+	if (count_tokens(tokens) < 6)
 		return (error_msg("Cylinder: requires 5 parameters"));
 	obj = malloc(sizeof(t_object));
 	cy = malloc(sizeof(t_cylinder));
 	if (!obj || !cy)
 		return (error_msg("Cylinder: memory allocation failed"));
-	if (!parse_vec3(tokens[1], &cy->center))
+	if (!parse_vec3(tokens[1], &cy->center, 0))
 		return (error_msg("Cylinder: invalid center coordinates"));
-	if (!parse_vec3(tokens[2], &cy->axis) || !validate_norm_vec3(cy->axis))
+	if (!parse_vec3(tokens[2], &cy->axis, 1) || !validate_norm_vec3(cy->axis))
 		return (error_msg("Cylinder: invalid orientation vector"));
 	if (!parse_double(tokens[3], &cy->diameter) || cy->diameter <= 0.0)
 		return (error_msg("Cylinder: invalid diameter"));

@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 23:35:03 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/07 15:54:08 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/08 13:06:55 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,9 @@ int	parse_color(char *str, t_color *color)
 }
 
 // Parses "x,y,z" into a t_vec3 struct
-int	parse_vec3(char *str, t_vec3 *vec)
+int	parse_vec3(char *str, t_vec3 *vec, int need_norm)
 {
+	t_vec3	norm_vec;
 	char	**parts;
 
 	parts = ft_split(str, ',');
@@ -80,6 +81,13 @@ int	parse_vec3(char *str, t_vec3 *vec)
 	vec->y = ft_atof(parts[1]);
 	vec->z = ft_atof(parts[2]);
 	free_tokens(parts);
+	if (need_norm)
+	{
+		norm_vec = vec3_normalize((t_vec3){vec->x, vec->y, vec->z});
+		vec->x = norm_vec.x;
+		vec->y = norm_vec.y;
+		vec->z = norm_vec.z;
+	}
 	return (1);
 }
 

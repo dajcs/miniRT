@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/06 20:16:46 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/08 13:07:47 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,7 +218,7 @@ int					parse_cylinder(char **tokens, t_scene *scene);
 int					count_tokens(char **tokens);
 void				free_tokens(char **tokens);
 int					parse_color(char *str, t_color *color);
-int					parse_vec3(char *str, t_vec3 *vec);
+int					parse_vec3(char *str, t_vec3 *vec, int need_norm);
 int					parse_double(char *str, double *val);
 
 /* --- parser_validation.c --- */

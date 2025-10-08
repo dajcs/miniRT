@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 13:24:03 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/06 08:59:21 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/08 13:09:18 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	parse_ambient(char **tokens, t_scene *scene)
 	double	ratio;
 	t_color	color;
 
-	if (count_tokens(tokens) != 3)
+	if (count_tokens(tokens) < 3)
 		return (error_msg("Ambient light: requires 2 parameters"));
 	if (scene->has_ambient)
 		return (error_msg("Ambient light: declared more than once"));
@@ -39,13 +39,13 @@ int	parse_camera(char **tokens, t_scene *scene)
 	t_vec3		orientation;
 	double		fov;
 
-	if (count_tokens(tokens) != 4)
+	if (count_tokens(tokens) < 4)
 		return (error_msg("Camera: requires 3 parameters"));
 	if (scene->has_camera)
 		return (error_msg("Camera: declared more than once"));
-	if (!parse_vec3(tokens[1], &origin))
+	if (!parse_vec3(tokens[1], &origin, 0))
 		return (error_msg("Camera: invalid origin coordinates"));
-	if (!parse_vec3(tokens[2], &orientation)
+	if (!parse_vec3(tokens[2], &orientation, 1)
 		|| !validate_norm_vec3(orientation))
 		return (error_msg("Camera: invalid orientation vector"));
 	if (!parse_double(tokens[3], &fov) || !validate_fov(fov))
@@ -58,45 +58,45 @@ int	parse_camera(char **tokens, t_scene *scene)
 }
 
 // Parses Light: L <x,y,z> <ratio> <R,G,B> (Color is ignored for mandatory part)
+	// t_color		color;
+	// if (!parse_color(tokens[3], &color))
+	// 	return (error_msg("Light: invalid color format"));
+	// light->color = color;
 int	parse_light(char **tokens, t_scene *scene)
 {
 	t_light		*light;
 	t_point3	pos;
 	double		ratio;
-	t_color		color;
 
-	if (count_tokens(tokens) != 4)
-		return (error_msg("Light: requires 3 parameters"));
+	if (count_tokens(tokens) < 3)
+		return (error_msg("Light: requires 2 parameters"));
 	light = malloc(sizeof(t_light));
 	if (!light)
 		return (error_msg("Light: memory allocation failed"));
-	if (!parse_vec3(tokens[1], &pos))
+	if (!parse_vec3(tokens[1], &pos, 0))
 		return (error_msg("Light: invalid position coordinates"));
 	if (!parse_double(tokens[2], &ratio) || !validate_ratio(ratio))
 		return (error_msg("Light: invalid brightness ratio"));
-	if (!parse_color(tokens[3], &color))
-		return (error_msg("Light: invalid color format"));
 	light->position = pos;
 	light->ratio = ratio;
-	light->color = color;
 	light->next = scene->lights;
 	scene->lights = light;
 	return (1);
 }
 
-// Parses Sphere: sp <x,y,z> <diameter> <R,G,B> 
+// Parses Sphere: sp <x,y,z> <diameter> <R,G,B>
 int	parse_sphere(char **tokens, t_scene *scene)
 {
 	t_object	*obj;
 	t_sphere	*sp;
 
-	if (count_tokens(tokens) != 4)
+	if (count_tokens(tokens) < 4)
 		return (error_msg("Sphere: requires 3 parameters"));
 	obj = malloc(sizeof(t_object));
 	sp = malloc(sizeof(t_sphere));
 	if (!obj || !sp)
 		return (error_msg("Sphere: memory allocation failed"));
-	if (!parse_vec3(tokens[1], &sp->center))
+	if (!parse_vec3(tokens[1], &sp->center, 0))
 		return (error_msg("Sphere: invalid center coordinates"));
 	if (!parse_double(tokens[2], &sp->radius) || sp->radius <= 0)
 		return (error_msg("Sphere: invalid diameter"));
