@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 19:51:42 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/04 19:28:28 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/08 16:12:44 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,12 @@ t_vec3	vec3_cross(t_vec3 v1, t_vec3 v2)
 	return (result);
 }
 
-/* vec3_mulxyz()
-	Component-wise multiplication of two vectors.
-	The result is a t_vec3.
+/* vec3_color_mul()
+	Component-wise multiplication of two vectors (or two colors)
+	The result is a t_vec3 (or t_color)
 	v_new = v1 x v2
 */
-t_vec3	vec3_mulxyz(t_vec3 v1, t_vec3 v2)
+t_vec3	vec3_color_mul(t_vec3 v1, t_vec3 v2)
 {
 	t_vec3	result;
 

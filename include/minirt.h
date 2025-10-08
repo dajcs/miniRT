@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/08 13:07:47 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/08 16:12:44 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -260,7 +260,7 @@ double				vec3_length_squared(t_vec3 v);
 double				vec3_length(t_vec3 v);
 t_vec3				vec3_normalize(t_vec3 v);
 t_vec3				vec3_cross(t_vec3 v1, t_vec3 v2);
-t_vec3				vec3_mulxyz(t_vec3 v1, t_vec3 v2);
+t_vec3				vec3_color_mul(t_vec3 v1, t_vec3 v2);
 
 /*
 	############## Render Module ###################

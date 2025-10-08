@@ -1,0 +1,15 @@
+# A: ambient light, <0.2> intensity, <255,255,255> white color
+A	0.1		255,255,255
+
+# C: camera, <0,1,-5> position, <0,1,0> orientation vector, <70> field of view
+C	0,0,10		0,0,-1		70
+
+# L: light, <10,10,-10> position, <0.7> intensity, <255,255,255> white color
+L	0,0,20	0.89		255,0,0
+
+# pl: plane, <0,0,0> position, <0,1,0> normal, <0,255,0> white color
+pl	0,0,0		0,0,1		255,255,255
+
+# sp: sphere, <0,0,10> center, <5> radius, <255,0,0> red color
+sp	0,0,0		2		255,0,0
+
