@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 14:53:51 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/04 07:47:46 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/08 13:48:04 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,17 +68,15 @@ int	read_and_parse_file(int fd, t_scene *scene)
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
-		if (*line != '\n' && *line != '#')
+		if (status && *line != '\n' && *line != '#')
 		{
 			if (!parse_line(line, scene))
 				status = 0;
 		}
 		free(line);
-		if (status == 0)
-			return (0);
 		line = get_next_line(fd);
 	}
-	return (1);
+	return (status);
 }
 
 // Main entry point for parsing a scene file
