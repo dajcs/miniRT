@@ -6,9 +6,21 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 11:22:10 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/02 14:33:06 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/08 09:34:29 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+/*
+# libft library @ school 42
+Additions:
+- `ft_strcmp`
+- `ft_printf`
+- `get_next_line`
+- `min`, `max`, `minf`, `maxf`, `is_space`
+- `ft_splits` (like `ft_split` but with a string of separators
+													instead of a single char)
+- `ft_atof` (ascii to float)
+*/
 
 #ifndef LIBFT_H
 # define LIBFT_H
