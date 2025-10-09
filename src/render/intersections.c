@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 18:40:52 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/05 21:31:28 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/09 15:43:23 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,10 @@ int	hit_object(t_object *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	else if (obj->type == CYLINDER)
 		hit = hit_cylinder(obj->shape_data, ray, t_max, rec);
 	if (hit)
+	{
 		rec->color = obj->color;
+		rec->speci = obj->speci;
+		rec->shine = obj->shine;
+	}
 	return (hit);
 }

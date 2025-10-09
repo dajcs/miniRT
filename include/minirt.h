@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/08 16:12:44 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/09 16:25:38 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,9 @@ typedef struct s_object
 {
 	t_obj_type		type;
 	t_color			color;	// Parsed object color (0-255 range)
+	double			speci;	// specular intensity [0-1] range @bonus prop
+	double			shine;	// specular blur, 1 blurred, 100 sharp,
+							//						1000 mirror @bonus prop
 	void			*shape_data; // Pointer to one of the structs below
 	struct s_object	*next;
 }					t_object;
@@ -129,6 +132,8 @@ typedef struct s_hit_record
 	t_point3		p;		// Point of intersection
 	t_vec3			normal;	// Surface normal at the intersection
 	t_color			color;	// Color of the object hit
+	double			speci;	// specular intensity [0-1] range @bonus prop
+	double			shine;	// specular blur, 1 blurred, 100 sharp,
 	double			t;		// 'time' or distance along the ray
 	// t_object		*obj;	// The object that was hit
 	// int			front_face;	// 1 if ray hits from outside, 0 when
@@ -158,6 +163,17 @@ typedef struct s_hit_info
 	t_point3		p;		// the calc.3D point of a potential intersesection
 	t_vec3			normal; // stores the calculated normal at the pot.inters.
 }					t_hit_info;
+
+// A struct because of the 5 variable limit at specular contribution computatio
+typedef struct s_spec_contrib
+{
+	t_vec3			light_dir;
+	t_vec3			view_dir;
+	t_vec3			reflect_dir;
+	double			spec_angle;
+	double			spec_intensity;
+	t_color			spec_contrib;
+}					t_spec_contrib;
 
 // --- Window management ---
 
@@ -210,6 +226,9 @@ int					parse_camera(char **tokens, t_scene *scene);
 int					parse_light(char **tokens, t_scene *scene);
 int					parse_sphere(char **tokens, t_scene *scene);
 
+/* --- parser_elements_bonus.c --- */
+int					set_material(t_object *obj, char **tokens, int i);
+
 /* --- parser_element2.c --- */
 int					parse_plane(char **tokens, t_scene *scene);
 int					parse_cylinder(char **tokens, t_scene *scene);
@@ -261,6 +280,9 @@ double				vec3_length(t_vec3 v);
 t_vec3				vec3_normalize(t_vec3 v);
 t_vec3				vec3_cross(t_vec3 v1, t_vec3 v2);
 t_vec3				vec3_color_mul(t_vec3 v1, t_vec3 v2);
+
+/* --- vec3_ops3_bonus.c --- */
+t_vec3				vec3_reflect(t_vec3 in, t_vec3 n);
 
 /*
 	############## Render Module ###################

@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 07:13:43 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/08 16:24:36 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/09 16:56:49 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,22 @@ static t_color	clamp_color(t_color color)
 	color.y = fmin(1.0, color.y);
 	color.z = fmin(1.0, color.z);
 	return (color);
+}
+
+static t_color	add_spec_contrib(t_hit_record *rec, t_light *light,
+	t_scene *scene, t_color final_color)
+{
+	t_spec_contrib	sc;
+
+	sc.light_dir = vec3_normalize(vec3_sub(light->position, rec->p));
+	sc.view_dir = vec3_normalize(vec3_sub(scene->camera.origin, rec->p));
+	sc.reflect_dir = vec3_reflect(vec3_mul(sc.light_dir, -1), rec->normal);
+	sc.spec_angle = fmax(0.0, vec3_dot(sc.view_dir, sc.reflect_dir));
+	sc.spec_intensity = pow(sc.spec_angle, rec->shine);
+	sc.spec_contrib = vec3_mul(light->color, sc.spec_intensity * rec->speci);
+	sc.spec_contrib = vec3_mul(sc.spec_contrib, light->ratio);
+	final_color = vec3_add(final_color, sc.spec_contrib);
+	return (final_color);
 }
 
 /* is_in_shadow()
@@ -84,17 +100,13 @@ int	is_in_shadow(t_point3 hit_point, t_light *light, t_scene *scene)
 		- calculate geometric diffuse factor `diffuse_intensity` (dot product)
 		- calculate final diffuse contribution from this light:
 			Contribution = (light_color * object_color) * intensity * ratio
-		- add this diffuse_contribution to the final_color
+		- add this diffuse_color to the final_color
 
 	3.) Specular Lighting: This simulates shiny highlights or reflections of a
 	light source on the surface. The intensity of the highlight depends on the
 	viewing angle. It's brightest when the viewing direction is aligned with
 	the reflection of the light source.
 
-	t_vec3	reflect(t_vec3 v, t_vec3 n)
-	{
-		return (vec3_sub(v, vec3_mul(n, 2 * vec3_dot(v, n))));
-	}
 			// Specular add-on (for bonus)
 			view_dir = vec3_normalize(vec3_sub(ray->origin, rec->p));
 			reflect_dir = reflect(vec3_mul(light_dir, -1), rec->normal);
@@ -112,7 +124,7 @@ t_color	calculate_lighting(t_hit_record *rec, t_scene *scene)
 	t_color	final_color;
 	t_vec3	light_dir;
 	double	diffuse_intensity;
-	t_color	diffuse_contribution;
+	t_color	diffuse_color;
 	t_light	*light;
 
 	final_color = vec3_mul(scene->ambient_light, scene->ambient_ratio);
@@ -124,10 +136,11 @@ t_color	calculate_lighting(t_hit_record *rec, t_scene *scene)
 		{
 			light_dir = vec3_normalize(vec3_sub(light->position, rec->p));
 			diffuse_intensity = fmax(0.0, vec3_dot(rec->normal, light_dir));
-			diffuse_contribution = vec3_color_mul(light->color, rec->color);
-			diffuse_contribution = vec3_mul(diffuse_contribution,
+			diffuse_color = vec3_color_mul(light->color, rec->color);
+			diffuse_color = vec3_mul(diffuse_color,
 					diffuse_intensity * light->ratio);
-			final_color = vec3_add(final_color, diffuse_contribution);
+			final_color = vec3_add(final_color, diffuse_color);
+			final_color = add_spec_contrib(rec, light, scene, final_color);
 		}
 		light = light->next;
 	}

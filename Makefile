@@ -6,7 +6,7 @@
 #    By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/02 13:34:30 by anemet            #+#    #+#              #
-#    Updated: 2025/10/08 16:55:50 by anemet           ###   ########.fr        #
+#    Updated: 2025/10/09 15:07:53 by anemet           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,7 @@ SRCS_WINDOW = src/window/window.c \
                 src/window/cleanup.c
 
 SRCS_MATH = src/math/vec3_ops1.c \
-				src/math/vec3_ops2.c \
+				src/math/vec3_ops2.c
 
 SRCS_RENDER = src/render/renderer.c \
 				src/render/camera.c \
@@ -49,7 +49,7 @@ SRCS_RENDER = src/render/renderer.c \
 SRCS_PARSER_BONUS = src/parser/parser.c \
                 src/parser/parser_utils.c \
                 src/parser/parser_elements_bonus.c \
-                src/parser/parser_element2.c \
+                src/parser/parser_element2_bonus.c \
 				src/parser/parser_validation.c \
                 src/parser/errors.c
 
@@ -59,6 +59,7 @@ SRCS_WINDOW_BONUS = src/window/window.c \
 
 SRCS_MATH_BONUS = src/math/vec3_ops1.c \
 				src/math/vec3_ops2.c \
+				src/math/vec3_ops3_bonus.c \
 
 SRCS_RENDER_BONUS = src/render/renderer.c \
 				src/render/camera.c \

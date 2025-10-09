@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 13:24:03 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/08 14:59:09 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/09 15:49:11 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,14 +84,25 @@ int	parse_light(char **tokens, t_scene *scene)
 	return (1);
 }
 
-// Parses Sphere: sp <x,y,z> <diameter> <R,G,B>
+int	set_material(t_object *obj, char **tokens, int i)
+{
+	if (!parse_color(tokens[i++], &obj->color))
+		return (error_msg("Invalid color format"));
+	if (!parse_double(tokens[i++], &obj->speci) || !validate_ratio(obj->speci))
+		return (error_msg("Specular intensity must be in [0,1]"));
+	if (!parse_double(tokens[i], &obj->shine) || obj->shine < 1.0)
+		return (error_msg("Shininess must be >= 1.0"));
+	return (1);
+}
+
+// Parses Sphere: sp <x,y,z> <diameter> <R,G,B> <specular intens.> <shininess>
 int	parse_sphere(char **tokens, t_scene *scene)
 {
 	t_object	*obj;
 	t_sphere	*sp;
 
-	if (count_tokens(tokens) < 4)
-		return (error_msg("Sphere: requires 3 parameters"));
+	if (count_tokens(tokens) < 6)
+		return (error_msg("Sphere: bonus part requires 5 parameters"));
 	obj = malloc(sizeof(t_object));
 	sp = malloc(sizeof(t_sphere));
 	if (!obj || !sp)
@@ -100,9 +111,9 @@ int	parse_sphere(char **tokens, t_scene *scene)
 		return (error_msg("Sphere: invalid center coordinates"));
 	if (!parse_double(tokens[2], &sp->radius) || sp->radius <= 0)
 		return (error_msg("Sphere: invalid diameter"));
+	if (!set_material(obj, tokens, 3))
+		return (error_msg("Sphere: `set_material()` error"));
 	sp->radius /= 2.0;
-	if (!parse_color(tokens[3], &obj->color))
-		return (error_msg("Sphere: invalid color format"));
 	obj->type = SPHERE;
 	obj->shape_data = sp;
 	obj->next = scene->objects;
