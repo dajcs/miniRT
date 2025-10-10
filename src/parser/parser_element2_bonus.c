@@ -6,20 +6,20 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 14:26:45 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/10 15:20:17 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/10 17:57:02 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-// Parses Plane: pl <x,y,z> <nx,ny,nz> <R,G,B>
+// Parses Plane: pl <x,y,z> <nx,ny,nz> <R,G,B> <specular> <shine>
 int	parse_plane(char **tokens, t_scene *scene)
 {
 	t_object	*obj;
 	t_plane		*pl;
 
-	if (count_tokens(tokens) < 4)
-		return (error_msg("Plane: requires 3 parameters"));
+	if (count_tokens(tokens) < 6)
+		return (error_msg("Plane: bonus part requires 5+ parameters"));
 	obj = malloc(sizeof(t_object));
 	pl = malloc(sizeof(t_plane));
 	if (!obj || !pl)
@@ -92,7 +92,7 @@ int	parse_cone(char **tokens, t_scene *scene)
 		return (error_msg("Cone: invalid tip coordinates"));
 	if (!parse_vec3(tokens[2], &co->axis, 1) || !validate_norm_vec3(co->axis))
 		return (error_msg("Cone: invalid axis orientation vector"));
-	if (!parse_double(tokens[3], &co->angle) || !validate_angle(co->angle))
+	if (!parse_double(tokens[3], &co->angle) || !validate_angle(co))
 		return (error_msg("Cone: invalid angle"));
 	if (!parse_double(tokens[4], &co->height) || co->height <= 0.0)
 		return (error_msg("Cone: height should be > 0"));

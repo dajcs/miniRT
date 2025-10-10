@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 13:24:03 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/10 15:00:38 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/10 17:57:17 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,8 @@ int	parse_light(char **tokens, t_scene *scene)
 	scene->lights = light;
 	return (1);
 }
-
+// parsing the material propoerties of the objects
+// <color> <specular> <shininess> <checker flag> <color2> <pattern_scale>
 int	set_material(t_object *obj, char **tokens, int i)
 {
 	if (!parse_color(tokens[i++], &obj->color))
@@ -109,7 +110,7 @@ int	parse_sphere(char **tokens, t_scene *scene)
 	t_sphere	*sp;
 
 	if (count_tokens(tokens) < 6)
-		return (error_msg("Sphere: bonus part requires 5 parameters"));
+		return (error_msg("Sphere: bonus part requires 5+ parameters"));
 	obj = malloc(sizeof(t_object));
 	sp = malloc(sizeof(t_sphere));
 	if (!obj || !sp)

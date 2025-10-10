@@ -26,11 +26,11 @@ int	parse_int(char *str, int *val)
 
 int	validate_angle(t_cone *co)
 {
-	double cos_angle;
+	double	cos_angle;
 
 	if (co->angle <= 0 || co->angle >= 90)
 		return (error_msg("Half angle must be in (0, 90)"));
 	cos_angle = cos(co->angle * M_PI / 180.0);
 	co->cos_angle_sq = cos_angle * cos_angle;
-	return 1;
+	return (1);
 }
