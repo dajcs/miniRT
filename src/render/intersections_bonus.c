@@ -1,16 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   intersections.c                                    :+:      :+:    :+:   */
+/*   intersections_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 18:40:52 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/10 11:05:18 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/10 12:56:30 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+
+// calculate color of the checker pattern
+// the floor() function replaced with `nearbyint()` because of "dust" artifacts
+static t_color	get_pattern_color(t_hit_record *rec, t_object *obj)
+{
+	double	scaled_x;
+	double	scaled_y;
+	double	scaled_z;
+	int		sum;
+
+	scaled_x = nearbyint(rec->p.x * obj->pattern_scale);
+	scaled_y = nearbyint(rec->p.y * obj->pattern_scale);
+	scaled_z = nearbyint(rec->p.z * obj->pattern_scale);
+	sum = (int)(scaled_x + scaled_y + scaled_z);
+	if (sum % 2 == 0)
+		return (obj->color);
+	else
+		return (obj->color2);
+}
 
 /* hit_sphere()
 	Tests for a ray-sphere intersection
@@ -189,6 +208,12 @@ int	hit_object(t_object *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	else if (obj->type == CYLINDER)
 		hit = hit_cylinder(obj->shape_data, ray, t_max, rec);
 	if (hit)
+	{
 		rec->color = obj->color;
+		rec->speci = obj->speci;
+		rec->shine = obj->shine;
+		if (obj->checker)
+			rec->color = get_pattern_color(rec, obj);
+	}
 	return (hit);
 }

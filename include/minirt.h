@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/09 16:25:38 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/10 11:11:53 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,15 @@ typedef struct s_object
 {
 	t_obj_type		type;
 	t_color			color;	// Parsed object color (0-255 range)
+	// --- specular data ---
 	double			speci;	// specular intensity [0-1] range @bonus prop
 	double			shine;	// specular blur, 1 blurred, 100 sharp,
 							//						1000 mirror @bonus prop
+	// --- checkerboard pattern ---
+	int				checker;		// a simple flag (0 or 1)
+	t_color			color2;			// the second color of the pattern
+	double			pattern_scale;	// the size of the checker squares
+	// --- pointer to object specific shape data and to the next object
 	void			*shape_data; // Pointer to one of the structs below
 	struct s_object	*next;
 }					t_object;
@@ -239,6 +245,9 @@ void				free_tokens(char **tokens);
 int					parse_color(char *str, t_color *color);
 int					parse_vec3(char *str, t_vec3 *vec, int need_norm);
 int					parse_double(char *str, double *val);
+
+/* --- parser_utils_bonus.c --- */
+int					parse_int(char *str, int *val);
 
 /* --- parser_validation.c --- */
 int					validate_ratio(double ratio);

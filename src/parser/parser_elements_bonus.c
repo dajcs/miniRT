@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 13:24:03 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/09 15:49:11 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/10 11:11:03 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,15 @@ int	set_material(t_object *obj, char **tokens, int i)
 		return (error_msg("Invalid color format"));
 	if (!parse_double(tokens[i++], &obj->speci) || !validate_ratio(obj->speci))
 		return (error_msg("Specular intensity must be in [0,1]"));
-	if (!parse_double(tokens[i], &obj->shine) || obj->shine < 1.0)
+	if (!parse_double(tokens[i++], &obj->shine) || obj->shine < 1.0)
 		return (error_msg("Shininess must be >= 1.0"));
+	if (!parse_int(tokens[i++], &obj->checker) || !obj->checker)
+		return (1);
+	if (!parse_color(tokens[i++], &obj->color2))
+		return (error_msg("Invalid 2nd color format"));
+	if (!parse_double(tokens[i], &obj->pattern_scale)
+		|| obj->pattern_scale <= 0)
+		return (error_msg("Pattern scale should be > 0"));
 	return (1);
 }
 

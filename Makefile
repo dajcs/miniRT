@@ -6,7 +6,7 @@
 #    By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/02 13:34:30 by anemet            #+#    #+#              #
-#    Updated: 2025/10/09 15:07:53 by anemet           ###   ########.fr        #
+#    Updated: 2025/10/10 11:12:12 by anemet           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,6 +48,7 @@ SRCS_RENDER = src/render/renderer.c \
 # Source files
 SRCS_PARSER_BONUS = src/parser/parser.c \
                 src/parser/parser_utils.c \
+                src/parser/parser_utils_bonus.c \
                 src/parser/parser_elements_bonus.c \
                 src/parser/parser_element2_bonus.c \
 				src/parser/parser_validation.c \
@@ -64,7 +65,7 @@ SRCS_MATH_BONUS = src/math/vec3_ops1.c \
 SRCS_RENDER_BONUS = src/render/renderer.c \
 				src/render/camera.c \
 				src/render/cylinder_intersect.c \
-				src/render/intersections.c \
+				src/render/intersections_bonus.c \
 				src/render/lighting_bonus.c
 
 
