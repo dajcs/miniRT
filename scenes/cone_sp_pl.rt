@@ -5,11 +5,15 @@ A	0.1		255,255,255
 C	0,0,10		0,0,-1		70
 
 # L: light, <10,10,-10> position, <0.7> intensity, <255,255,255> white color
-L	0,0,20	0.89		255,0,0
+L	0,0,20	0.89		255,255,255
 
 # pl: plane, <0,0,0> position, <0,1,0> normal, <0,255,0> white color
-pl	0,0,0		0,0,1		255,255,255
+pl	0,0,0		0,0,1		255,255,255		0	10  1	255,255,0	2
 
 # sp: sphere, <0,0,10> center, <5> radius, <255,0,0> red color
-sp	0,0,0		2		255,0,0
+sp	0,0,0		2		255,0,0		1		10
+
+# A cone with its tip at (0,10,20), pointing down, with a 30-degree total angle.
+# co: cone, [tip_xyz] [axis_xyz] [angle_deg] [height] [color]	 [specular] [shininess]
+co			0,10,20		0,-1,0		30.0		10.0	255,128,0	0.6		15
 

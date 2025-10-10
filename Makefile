@@ -6,7 +6,7 @@
 #    By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/02 13:34:30 by anemet            #+#    #+#              #
-#    Updated: 2025/10/10 11:12:12 by anemet           ###   ########.fr        #
+#    Updated: 2025/10/10 14:25:03 by anemet           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,7 +46,7 @@ SRCS_RENDER = src/render/renderer.c \
 
 ### Bonus Source Files ###
 # Source files
-SRCS_PARSER_BONUS = src/parser/parser.c \
+SRCS_PARSER_BONUS = src/parser/parser_bonus.c \
                 src/parser/parser_utils.c \
                 src/parser/parser_utils_bonus.c \
                 src/parser/parser_elements_bonus.c \

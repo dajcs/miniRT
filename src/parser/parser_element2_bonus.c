@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 14:26:45 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/09 15:01:50 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/10 15:20:17 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,11 @@ int	parse_plane(char **tokens, t_scene *scene)
 	return (1);
 }
 
-// Parses Cylinder: cy <x,y,z> <ax,ay,az> <diameter> <height> <R,G,B>
-// we're considering the base cap middle as cylinder center
-// if axis middle should be considered, then the line below should be added
-// cy->center = vec3_add(cy->center, vec3_mul(cy->axis, -cy->height / 2.0));
+// Parses Cylinder: cy <x,y,z> <ax,ay,az> <diameter> <height>
+// set_material: [color] [specular] [shininess] [checker] [color2] [patter]
+// in rendering we're considering the base cap middle as cylinder center
+// parsing cylinder center is corrected with
+// cy->center = vec3_sub(cy->center, vec3_mul(cy->axis, cy->height / 2.0));
 int	parse_cylinder(char **tokens, t_scene *scene)
 {
 	t_object	*obj;
@@ -55,16 +56,50 @@ int	parse_cylinder(char **tokens, t_scene *scene)
 		return (error_msg("Cylinder: memory allocation failed"));
 	if (!parse_vec3(tokens[1], &cy->center, 0))
 		return (error_msg("Cylinder: invalid center coordinates"));
+	cy->center = vec3_sub(cy->center, vec3_mul(cy->axis, cy->height / 2.0));
 	if (!parse_vec3(tokens[2], &cy->axis, 1) || !validate_norm_vec3(cy->axis))
-		return (error_msg("Cylinder: invalid orientation vector"));
+		return (error_msg("Cylinder: invalid axis orientation vector"));
 	if (!parse_double(tokens[3], &cy->diameter) || cy->diameter <= 0.0)
-		return (error_msg("Cylinder: invalid diameter"));
+		return (error_msg("Cylinder: diameter should be > 0"));
 	if (!parse_double(tokens[4], &cy->height) || cy->height <= 0.0)
-		return (error_msg("Cylinder: invalid height"));
+		return (error_msg("Cylinder: height should be > 0"));
 	if (!set_material(obj, tokens, 5))
 		return (error_msg("Cylinder: `set_material()` error"));
 	obj->type = CYLINDER;
 	obj->shape_data = cy;
+	obj->next = scene->objects;
+	scene->objects = obj;
+	return (1);
+}
+
+// Parses Cone: co [tip_xyz] [axis_xyz] [half_angle_deg] [height]
+// set_material: [color] [specular] [shininess] [checker] [color2] [patter]
+// we're considering the base cap middle as cylinder center
+// if axis middle should be considered, then the line below should be added
+// cy->center = vec3_add(cy->center, vec3_mul(cy->axis, -cy->height / 2.0));
+int	parse_cone(char **tokens, t_scene *scene)
+{
+	t_object	*obj;
+	t_cone		*co;
+
+	if (count_tokens(tokens) < 5)
+		return (error_msg("Cone: requires 5 parameters"));
+	obj = malloc(sizeof(t_object));
+	co = malloc(sizeof(t_cone));
+	if (!obj || !co)
+		return (error_msg("Cone: memory allocation failed"));
+	if (!parse_vec3(tokens[1], &co->tip, 0))
+		return (error_msg("Cone: invalid tip coordinates"));
+	if (!parse_vec3(tokens[2], &co->axis, 1) || !validate_norm_vec3(co->axis))
+		return (error_msg("Cone: invalid axis orientation vector"));
+	if (!parse_double(tokens[3], &co->angle) || !validate_angle(co->angle))
+		return (error_msg("Cone: invalid angle"));
+	if (!parse_double(tokens[4], &co->height) || co->height <= 0.0)
+		return (error_msg("Cone: height should be > 0"));
+	if (!set_material(obj, tokens, 5))
+		return (error_msg("Cone: `set_material()` error"));
+	obj->type = CONE;
+	obj->shape_data = co;
 	obj->next = scene->objects;
 	scene->objects = obj;
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 14:26:45 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/08 13:10:09 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/10 14:33:05 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ int	parse_plane(char **tokens, t_scene *scene)
 }
 
 // Parses Cylinder: cy <x,y,z> <ax,ay,az> <diameter> <height> <R,G,B>
-// we're considering the base cap middle as cylinder center
-// if axis middle should be considered, then the line below should be added
-// cy->center = vec3_add(cy->center, vec3_mul(cy->axis, -cy->height / 2.0));
+// in rendering we're considering the base cap middle as cylinder center
+// parsing cylinder center is corrected with
+// cy->center = vec3_sub(cy->center, vec3_mul(cy->axis, cy->height / 2.0));
 int	parse_cylinder(char **tokens, t_scene *scene)
 {
 	t_object	*obj;
@@ -55,6 +55,7 @@ int	parse_cylinder(char **tokens, t_scene *scene)
 		return (error_msg("Cylinder: memory allocation failed"));
 	if (!parse_vec3(tokens[1], &cy->center, 0))
 		return (error_msg("Cylinder: invalid center coordinates"));
+	cy->center = vec3_sub(cy->center, vec3_mul(cy->axis, cy->height / 2.0));
 	if (!parse_vec3(tokens[2], &cy->axis, 1) || !validate_norm_vec3(cy->axis))
 		return (error_msg("Cylinder: invalid orientation vector"));
 	if (!parse_double(tokens[3], &cy->diameter) || cy->diameter <= 0.0)

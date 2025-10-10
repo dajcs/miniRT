@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 23:35:03 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/10 12:59:10 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/10 15:18:12 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,4 +22,15 @@ int	parse_int(char *str, int *val)
 		return (0);
 	*val = ft_atoi(str);
 	return (1);
+}
+
+int	validate_angle(t_cone *co)
+{
+	double cos_angle;
+
+	if (co->angle <= 0 || co->angle >= 90)
+		return (error_msg("Half angle must be in (0, 90)"));
+	cos_angle = cos(co->angle * M_PI / 180.0);
+	co->cos_angle_sq = cos_angle * cos_angle;
+	return 1;
 }

@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/10 11:11:53 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/10 14:45:09 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ typedef enum e_obj_type
 {
 	SPHERE,
 	PLANE,
-	CYLINDER
+	CYLINDER,
+	CONE
 }					t_obj_type;
 
 typedef struct s_object
@@ -117,6 +118,16 @@ typedef struct s_cylinder
 	double			diameter; // Parsed 'cy' diameter
 	double			height;	// Parsed 'cy' height
 }					t_cylinder;
+
+typedef struct s_cone
+{
+	t_point3		tip;	// the apex point of the cone
+	t_vec3			axis;	// the normalized direction of the cone's axis
+	double			height;	// the height for a finite cone
+	double			angle;	// angle in degrees
+	double			cos_angle_sq;	// pre-calculated cos^2 of the cone's
+																// half angle
+}					t_cone;
 
 // The main scene structure
 typedef struct s_scene
@@ -238,6 +249,7 @@ int					set_material(t_object *obj, char **tokens, int i);
 /* --- parser_element2.c --- */
 int					parse_plane(char **tokens, t_scene *scene);
 int					parse_cylinder(char **tokens, t_scene *scene);
+int					parse_cone(char **tokens, t_scene *scene);
 
 /* --- parser_utils.c --- */
 int					count_tokens(char **tokens);
