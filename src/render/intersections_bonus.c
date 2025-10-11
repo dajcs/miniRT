@@ -6,14 +6,14 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 18:40:52 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/10 18:22:34 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/11 07:21:30 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
 // calculate color of the checker pattern
-// the floor() function replaced with `nearbyint()` because of "dust" artifacts
+// the floor() function replaced with `round()` because of "dust" artifacts
 static t_color	get_pattern_color(t_hit_record *rec, t_object *obj)
 {
 	double	scaled_x;
@@ -21,10 +21,9 @@ static t_color	get_pattern_color(t_hit_record *rec, t_object *obj)
 	double	scaled_z;
 	int		sum;
 
-	// TODO if (obj->pattern_scale + 0.5)
-	scaled_x = nearbyint(rec->p.x * obj->pattern_scale);
-	scaled_y = nearbyint(rec->p.y * obj->pattern_scale);
-	scaled_z = nearbyint(rec->p.z * obj->pattern_scale);
+	scaled_x = round(rec->p.x * obj->pattern_scale);
+	scaled_y = round(rec->p.y * obj->pattern_scale);
+	scaled_z = round(rec->p.z * obj->pattern_scale);
 	sum = (int)(scaled_x + scaled_y + scaled_z);
 	if (sum % 2 == 0)
 		return (obj->color);
