@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 12:20:16 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/13 10:33:09 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/13 14:11:44 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,12 @@ static int	is_hit_in_bounds(double m, double height)
 	return (m >= 0 && m <= height);
 }
 
+static void	set_cone_wall_hit(t_hit_info *info, double qt)
+{
+	info->hit_t = qt;
+	info->part = HIT_WALL;
+}
+
 /* intersect_cone_wall()
 	This function solves the quadratic equation and checks both roots
 	Input:
@@ -75,18 +81,12 @@ static int	intersect_cone_wall(t_cone *co, t_ray *r, t_hit_info *info)
 		return (0);
 	q.t1 = (-q.b - sqrt(q.discriminant)) / (2 * q.a);
 	q.t2 = (-q.b + sqrt(q.discriminant)) / (2 * q.a);
-	if (q.t1 > 0.001 && q.t1 < info->hit_t
-		&& is_hit_in_bounds(oc_dot_a + q.t1 * d_dot_a, co->height))
-	{
-		info->hit_t = q.t1;
-		info->part = HIT_WALL;
-	}
-	if (q.t2 > 0.001 && q.t2 < info->hit_t
-		&& is_hit_in_bounds(oc_dot_a + q.t2 * d_dot_a, co->height))
-	{
-		info->hit_t = q.t2;
-		info->part = HIT_WALL;
-	}
+	if (q.t1 > 0.001 && q.t1 < info->hit_t && is_hit_in_bounds(oc_dot_a + q.t1
+			* d_dot_a, co->height))
+		set_cone_wall_hit(info, q.t1);
+	if (q.t2 > 0.001 && q.t2 < info->hit_t && is_hit_in_bounds(oc_dot_a + q.t2
+			* d_dot_a, co->height))
+		set_cone_wall_hit(info, q.t2);
 	return (info->part == HIT_WALL);
 }
 
@@ -103,6 +103,7 @@ static int	intersect_cone_wall(t_cone *co, t_ray *r, t_hit_info *info)
 	If the plane is hit, it then calculates the squared radius of the cap and
 	checks if the intersection point is within that radius.
 
+	0. Initialize the hit_info struct (0, t_max, HIT_NONE)
 	1. Define the plane for the cone's base cap. The point is at the base,
 		and the normal points along the axis.
 	2. Check for an intersection with the cap's plane. We only consider hits
@@ -112,12 +113,16 @@ static int	intersect_cone_wall(t_cone *co, t_ray *r, t_hit_info *info)
 	4. Check if the hit point is within the cap's circular boudary.
 	5. If hit within radius, update the hit_info struct
 */
-static int	intersect_cone_cap(t_cone *co, t_ray *r, t_hit_info *info)
+static int	intersect_cone_cap(t_cone *co, t_ray *r, t_hit_info *info,
+		double t_max)
 {
 	t_plane			cap;
 	t_hit_record	temp_rec;
 	double			radius_sq;
 
+	info->hit = 0;
+	info->hit_t = t_max;
+	info->part = HIT_NONE;
 	cap.point = vec3_add(co->tip, vec3_mul(co->axis, co->height));
 	cap.normal = co->axis;
 	if (hit_plane(&cap, r, info->hit_t, &temp_rec))
@@ -147,77 +152,42 @@ static int	intersect_cone_cap(t_cone *co, t_ray *r, t_hit_info *info)
 		*rec:	record of the ray-cone intersection
 	Return 1 if there is a valid hit with the cone, 0 otherwise
 
-	1. store in `hit_wall` the intersection with the infinite cone's walls
-	2. store in `hit_cap` the intersection with the base cap
-	3. If any valid hist was found, populate the final hit record
-	4. Calculate the normal based on what was hit
-		- if wall was hit, normal is subsequently computed
-		- if cap has closest hit, the normal is the cone axis
-	5. Revert the normal direction to point towards the incoming ray
+	1. set `info` by the eventual intersection with the infinite cone's walls
+	2. set `info` by the eventual intersection with the base cap
+	3. If no valid hit => Return
+	4. Populate the hit record t, p, n values
+	5. Calculate the normal based on what was hit
+		- if HIT_WALL, normal is subsequently computed with:
+			p_tip = P - tip
+			m = p_tip projection on axis
+			using: 1 + tan^2(a) = 1 / cos^2(a)
+		- if HIT_CAP, the normal is the cone axis
+	6. Revert the normal direction to point towards the incoming ray
 */
 int	hit_cone(t_cone *co, t_ray *ray, double t_max, t_hit_record *rec)
 {
 	t_hit_info	info;
-	t_vec3		V;
+	t_vec3		p_tip;
 	double		m;
 	double		k_inv_cos2;
 
-	info.hit = 0;
-	info.hit_t = t_max;
-	info.part = HIT_NONE;
+	(void)intersect_cone_cap(co, ray, &info, t_max);
 	(void)intersect_cone_wall(co, ray, &info);
-	(void)intersect_cone_cap(co, ray, &info);
 	if (info.hit_t >= t_max || info.part == HIT_NONE)
 		return (0);
 	rec->t = info.hit_t;
 	rec->p = vec3_add(ray->origin, vec3_mul(ray->direction, rec->t));
 	if (info.part == HIT_WALL)
 	{
-		// V = P - tip
-		V = vec3_sub(rec->p, co->tip);
-		// m = projection on axis
-		m = vec3_dot(V, co->axis);
-		// 1 + tan^2(a) = 1 / cos^2(a)
+		p_tip = vec3_sub(rec->p, co->tip);
+		m = vec3_dot(p_tip, co->axis);
 		k_inv_cos2 = 1.0 / co->cos_angle_sq;
-		rec->normal = vec3_normalize(vec3_sub(V,
-			vec3_mul(co->axis, m * k_inv_cos2)));
+		rec->normal = vec3_normalize(vec3_sub(p_tip, vec3_mul(co->axis, m
+						* k_inv_cos2)));
 	}
 	else if (info.part == HIT_CAP)
 		rec->normal = co->axis;
 	if (vec3_dot(ray->direction, rec->normal) > 0.0)
 		rec->normal = vec3_mul(rec->normal, -1);
 	return (1);
-
-	// t_hit_info	info;
-	// double		m;
-	// int			hit_wall;
-	// int			hit_cap;
-
-	// info.hit = 0;
-	// info.hit_t = t_max;
-	// hit_wall = intersect_cone_wall(co, ray, &info);
-	// hit_cap = intersect_cone_cap(co, ray, &info);
-	// if (info.hit_t < t_max)
-	// {
-	// 	rec->t = info.hit_t;
-	// 	rec->p = vec3_add(ray->origin, vec3_mul(ray->direction, rec->t));
-	// 	if (hit_wall && (!hit_cap || rec->t == info.hit_t))
-	// 	{
-	// 		m = vec3_dot(vec3_sub(rec->p, co->tip), co->axis);
-	// 		// m = m * (1 + tan(acos(sqrt(co->cos_angle_sq)))
-	// 		// 		* tan(acos(sqrt(co->cos_angle_sq))));
-	// 		// rec->normal = vec3_normalize(vec3_sub(vec3_sub(rec->p, co->tip),
-	// 		// 			vec3_mul(co->axis, m)));
-	// 		rec->normal = vec3_normalize(vec3_sub(vec3_sub(rec->p, co->tip),
-	// 					vec3_mul(co->axis, m * (1
-	// 							+ tan(acos(sqrt(co->cos_angle_sq)))
-	// 							* tan(acos(sqrt(co->cos_angle_sq)))))));
-	// 	}
-	// 	else
-	// 		rec->normal = co->axis;
-	// 	if (vec3_dot(ray->direction, rec->normal) > 0.0)
-	// 		rec->normal = vec3_mul(rec->normal, -1);
-	// 	return (1);
-	// }
-	// return (0);
 }

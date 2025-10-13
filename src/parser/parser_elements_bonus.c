@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 13:24:03 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/10 17:57:17 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/13 14:12:31 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ int	parse_light(char **tokens, t_scene *scene)
 	scene->lights = light;
 	return (1);
 }
+
 // parsing the material propoerties of the objects
 // <color> <specular> <shininess> <checker flag> <color2> <pattern_scale>
 int	set_material(t_object *obj, char **tokens, int i)

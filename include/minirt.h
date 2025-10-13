@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/13 09:08:35 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/13 14:27:33 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,6 +270,7 @@ int					parse_double(char *str, double *val);
 /* --- parser_utils_bonus.c --- */
 int					parse_int(char *str, int *val);
 int					validate_angle(t_cone *co);
+char				**get_tokens(char *line);
 
 /* --- parser_validation.c --- */
 int					validate_ratio(double ratio);

@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 14:53:51 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/10 14:25:43 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/13 14:26:29 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,9 @@ int	parse_line(char *line, t_scene *scene)
 	char	**tokens;
 	int		result;
 
-	tokens = ft_splits(line, " \t\r\v\f");
-	if (!tokens || !tokens[0])
-	{
-		free_tokens(tokens);
+	tokens = get_tokens(line);
+	if (!tokens)
 		return (1);
-	}
 	if (ft_strcmp(tokens[0], "A") == 0)
 		result = parse_ambient(tokens, scene);
 	else if (ft_strcmp(tokens[0], "C") == 0)
