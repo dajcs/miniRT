@@ -4,6 +4,18 @@
 # A: Ambient light. Low intensity to make shadows noticeable but not pure black.
 A   0.2    255,255,255
 
+#
+#    +Y (Up)
+#          |
+#          |
+#          |
+#          +----------------> +X (Right)
+#         /
+#        /
+#       /
+#      +Z (Towards you)
+#
+
 # C: Camera. Positioned far back at z=-50, looking straight ahead.
 C   0,0,-50     0,0,1      70
 

@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 18:40:52 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/11 07:21:30 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/12 17:10:05 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,6 +207,8 @@ int	hit_object(t_object *obj, t_ray *ray, double t_max, t_hit_record *rec)
 		hit = hit_plane(obj->shape_data, ray, t_max, rec);
 	else if (obj->type == CYLINDER)
 		hit = hit_cylinder(obj->shape_data, ray, t_max, rec);
+	else if (obj->type == CONE)
+		hit = hit_cone(obj->shape_data, ray, t_max, rec);
 	if (hit)
 	{
 		rec->color = obj->color;

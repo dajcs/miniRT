@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/05 17:19:51 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/06 20:18:10 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/12 12:35:24 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,7 @@ int	intersect_cylinder_wall(t_cylinder *cy, t_ray *r, t_hit_info *info)
 	Input:
 		*cy:	the cylinder, used to get the radius
 		*r:		the ray being tested
-		*info:	the main hit_info struct, updated if a closer hit is found
+		*info:	the hit_info struct, updated if a closer hit is found
 		*cap:	the plane of the cap
 	Return 1 if a new, closer, valid hit was found on this cap, 0 otherwise
 

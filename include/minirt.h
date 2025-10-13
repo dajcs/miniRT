@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/10 17:42:03 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/12 17:13:04 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ typedef struct s_quadratic
 	double			t2;
 }					t_quadratic;
 
-// A struct to hold information about a potential (cylinder) intersection.
+// A struct to hold information about a potential (cylinder/cone) intersection.
 // It is used to pass hit data back from helper functions
 typedef struct s_hit_info
 {
@@ -324,6 +324,10 @@ int					check_single_cap(t_cylinder *cy, t_ray *r, t_hit_info *info,
 						t_plane *cap);
 int					intersect_cylinder_caps(t_cylinder *cy, t_ray *r,
 						t_hit_info *info);
+
+/* --- cone_intersect.c --- */
+int					hit_cone(t_cone *co, t_ray *ray, double t_max,
+						t_hit_record *rec);
 
 /* --- intersections.c --- */
 int					hit_sphere(t_sphere *sp, t_ray *ray, double t_max,

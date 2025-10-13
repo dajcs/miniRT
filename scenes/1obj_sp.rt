@@ -1,6 +1,18 @@
 # A: ambient light, <0.2> intensity, <255,255,255> white color
 A	0.1		255,255,255
 
+#
+#    +Y (Up)
+#          |
+#          |
+#          |
+#          +----------------> +X (Right)
+#         /
+#        /
+#       /
+#      +Z (Towards you)
+#
+
 # C: camera, <0,1,-5> position, <0,1,0> orientation vector, <70> field of view
 C	0,1,-5		0,0,1		70
 
