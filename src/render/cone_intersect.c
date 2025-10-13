@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 12:20:16 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/12 23:25:04 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/13 10:33:09 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,15 +75,19 @@ static int	intersect_cone_wall(t_cone *co, t_ray *r, t_hit_info *info)
 		return (0);
 	q.t1 = (-q.b - sqrt(q.discriminant)) / (2 * q.a);
 	q.t2 = (-q.b + sqrt(q.discriminant)) / (2 * q.a);
-	if (q.t1 > 0.001 && q.t1 < info->hit_t && is_hit_in_bounds(oc_dot_a + q.t1
-			* d_dot_a, co->height))
+	if (q.t1 > 0.001 && q.t1 < info->hit_t
+		&& is_hit_in_bounds(oc_dot_a + q.t1 * d_dot_a, co->height))
+	{
 		info->hit_t = q.t1;
-	if (q.t2 > 0.001 && q.t2 < info->hit_t && is_hit_in_bounds(oc_dot_a + q.t2
-			* d_dot_a, co->height))
+		info->part = HIT_WALL;
+	}
+	if (q.t2 > 0.001 && q.t2 < info->hit_t
+		&& is_hit_in_bounds(oc_dot_a + q.t2 * d_dot_a, co->height))
+	{
 		info->hit_t = q.t2;
-	if (info->hit_t == q.t1 || info->hit_t == q.t2)
-		return (1);
-	return (0);
+		info->part = HIT_WALL;
+	}
+	return (info->part == HIT_WALL);
 }
 
 /* intersect_cone_cap()
@@ -126,10 +130,11 @@ static int	intersect_cone_cap(t_cone *co, t_ray *r, t_hit_info *info)
 			info->p = temp_rec.p;
 			info->normal = temp_rec.normal;
 			info->hit = 1;
+			info->part = HIT_CAP;
 			return (1);
 		}
 	}
-	return 0;
+	return (0);
 }
 
 /* hit_cone()
@@ -153,35 +158,66 @@ static int	intersect_cone_cap(t_cone *co, t_ray *r, t_hit_info *info)
 int	hit_cone(t_cone *co, t_ray *ray, double t_max, t_hit_record *rec)
 {
 	t_hit_info	info;
+	t_vec3		V;
 	double		m;
-	int			hit_wall;
-	int			hit_cap;
+	double		k_inv_cos2;
 
 	info.hit = 0;
 	info.hit_t = t_max;
-	hit_wall = intersect_cone_wall(co, ray, &info);
-	hit_cap = intersect_cone_cap(co, ray, &info);
-	if (info.hit_t < t_max)
+	info.part = HIT_NONE;
+	(void)intersect_cone_wall(co, ray, &info);
+	(void)intersect_cone_cap(co, ray, &info);
+	if (info.hit_t >= t_max || info.part == HIT_NONE)
+		return (0);
+	rec->t = info.hit_t;
+	rec->p = vec3_add(ray->origin, vec3_mul(ray->direction, rec->t));
+	if (info.part == HIT_WALL)
 	{
-		rec->t = info.hit_t;
-		rec->p = vec3_add(ray->origin, vec3_mul(ray->direction, rec->t));
-		if (hit_wall && (!hit_cap || rec->t == info.hit_t))
-		{
-			m = vec3_dot(vec3_sub(rec->p, co->tip), co->axis);
-			// m = m * (1 + tan(acos(sqrt(co->cos_angle_sq)))
-			// 		* tan(acos(sqrt(co->cos_angle_sq))));
-			// rec->normal = vec3_normalize(vec3_sub(vec3_sub(rec->p, co->tip),
-			// 			vec3_mul(co->axis, m)));
-			rec->normal = vec3_normalize(vec3_sub(vec3_sub(rec->p, co->tip),
-						vec3_mul(co->axis, m * (1
-								+ tan(acos(sqrt(co->cos_angle_sq)))
-								* tan(acos(sqrt(co->cos_angle_sq)))))));
-		}
-		else
-			rec->normal = co->axis;
-		if (vec3_dot(ray->direction, rec->normal) > 0.0)
-			rec->normal = vec3_mul(rec->normal, -1);
-		return (1);
+		// V = P - tip
+		V = vec3_sub(rec->p, co->tip);
+		// m = projection on axis
+		m = vec3_dot(V, co->axis);
+		// 1 + tan^2(a) = 1 / cos^2(a)
+		k_inv_cos2 = 1.0 / co->cos_angle_sq;
+		rec->normal = vec3_normalize(vec3_sub(V,
+			vec3_mul(co->axis, m * k_inv_cos2)));
 	}
-	return (0);
+	else if (info.part == HIT_CAP)
+		rec->normal = co->axis;
+	if (vec3_dot(ray->direction, rec->normal) > 0.0)
+		rec->normal = vec3_mul(rec->normal, -1);
+	return (1);
+
+	// t_hit_info	info;
+	// double		m;
+	// int			hit_wall;
+	// int			hit_cap;
+
+	// info.hit = 0;
+	// info.hit_t = t_max;
+	// hit_wall = intersect_cone_wall(co, ray, &info);
+	// hit_cap = intersect_cone_cap(co, ray, &info);
+	// if (info.hit_t < t_max)
+	// {
+	// 	rec->t = info.hit_t;
+	// 	rec->p = vec3_add(ray->origin, vec3_mul(ray->direction, rec->t));
+	// 	if (hit_wall && (!hit_cap || rec->t == info.hit_t))
+	// 	{
+	// 		m = vec3_dot(vec3_sub(rec->p, co->tip), co->axis);
+	// 		// m = m * (1 + tan(acos(sqrt(co->cos_angle_sq)))
+	// 		// 		* tan(acos(sqrt(co->cos_angle_sq))));
+	// 		// rec->normal = vec3_normalize(vec3_sub(vec3_sub(rec->p, co->tip),
+	// 		// 			vec3_mul(co->axis, m)));
+	// 		rec->normal = vec3_normalize(vec3_sub(vec3_sub(rec->p, co->tip),
+	// 					vec3_mul(co->axis, m * (1
+	// 							+ tan(acos(sqrt(co->cos_angle_sq)))
+	// 							* tan(acos(sqrt(co->cos_angle_sq)))))));
+	// 	}
+	// 	else
+	// 		rec->normal = co->axis;
+	// 	if (vec3_dot(ray->direction, rec->normal) > 0.0)
+	// 		rec->normal = vec3_mul(rec->normal, -1);
+	// 	return (1);
+	// }
+	// return (0);
 }

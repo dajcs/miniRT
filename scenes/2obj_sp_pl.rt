@@ -20,4 +20,4 @@ L -40,0,30	 0.7	 255,255,255
 # pl: plane, <0,0,20> position, <1,0,0> normal, <0,255,0> green | specular | shine | checker | color2 | scale
 pl 0,0,20	 1,0,0	 255,255,0 			0.7		20				0		255,255,255			0.5
 # sp: sphere, <0,0,20> center, <20> diameter, <255,0,0> red | specular | shine | checker | color2 | scale
-sp 	0,0,20	 10	 255,0,0 				0.7		20				1		255,255,255			0.5
+sp 	0,0,20	 22	 255,0,0 				0.7		20				1		255,255,255			0.33

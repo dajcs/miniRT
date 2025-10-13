@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 14:26:45 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/10 14:33:05 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/13 10:44:51 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ int	parse_cylinder(char **tokens, t_scene *scene)
 		return (error_msg("Cylinder: memory allocation failed"));
 	if (!parse_vec3(tokens[1], &cy->center, 0))
 		return (error_msg("Cylinder: invalid center coordinates"));
-	cy->center = vec3_sub(cy->center, vec3_mul(cy->axis, cy->height / 2.0));
 	if (!parse_vec3(tokens[2], &cy->axis, 1) || !validate_norm_vec3(cy->axis))
 		return (error_msg("Cylinder: invalid orientation vector"));
 	if (!parse_double(tokens[3], &cy->diameter) || cy->diameter <= 0.0)
@@ -64,6 +63,7 @@ int	parse_cylinder(char **tokens, t_scene *scene)
 		return (error_msg("Cylinder: invalid height"));
 	if (!parse_color(tokens[5], &obj->color))
 		return (error_msg("Cylinder: invalid color format"));
+	cy->center = vec3_sub(cy->center, vec3_mul(cy->axis, cy->height / 2.0));
 	obj->type = CYLINDER;
 	obj->shape_data = cy;
 	obj->next = scene->objects;

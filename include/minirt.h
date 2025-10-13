@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/12 17:13:04 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/13 09:08:35 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,14 @@ typedef struct s_quadratic
 	double			t2;
 }					t_quadratic;
 
+// Identify which part of a shape was hit (for cones)
+typedef enum e_hit_part
+{
+	HIT_NONE = 0,
+	HIT_WALL = 1,
+	HIT_CAP = 2
+}					t_hit_part;
+
 // A struct to hold information about a potential (cylinder/cone) intersection.
 // It is used to pass hit data back from helper functions
 typedef struct s_hit_info
@@ -179,6 +187,7 @@ typedef struct s_hit_info
 	double			t;		// t value of a **potential** new intersection
 	t_point3		p;		// the calc.3D point of a potential intersesection
 	t_vec3			normal; // stores the calculated normal at the pot.inters.
+	t_hit_part		part;	// which surface produced hit_t (wall or cap)
 }					t_hit_info;
 
 // A struct because of the 5 variable limit at specular contribution computatio
