@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 18:40:52 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/12 17:10:05 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/14 15:56:26 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,8 @@ int	hit_object(t_object *obj, t_ray *ray, double t_max, t_hit_record *rec)
 		rec->color = obj->color;
 		rec->speci = obj->speci;
 		rec->shine = obj->shine;
-		if (obj->checker)
+		rec->reflect = obj->reflect;
+		if (obj->checker == CHECKER)
 			rec->color = get_pattern_color(rec, obj);
 	}
 	return (hit);

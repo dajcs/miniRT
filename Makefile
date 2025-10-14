@@ -6,7 +6,7 @@
 #    By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/02 13:34:30 by anemet            #+#    #+#              #
-#    Updated: 2025/10/12 17:14:19 by anemet           ###   ########.fr        #
+#    Updated: 2025/10/14 16:02:10 by anemet           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,7 +62,7 @@ SRCS_MATH_BONUS = src/math/vec3_ops1.c \
 				src/math/vec3_ops2.c \
 				src/math/vec3_ops3_bonus.c \
 
-SRCS_RENDER_BONUS = src/render/renderer.c \
+SRCS_RENDER_BONUS = src/render/renderer_bonus.c \
 				src/render/camera.c \
 				src/render/cylinder_intersect.c \
 				src/render/cone_intersect.c \

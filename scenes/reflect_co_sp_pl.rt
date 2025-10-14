@@ -14,13 +14,13 @@ A	0.1		255,255,255
 #
 
 # C: camera, <0,1,-5> position, <0,1,0> orientation vector, <70> field of view
-C	-5,2,10		0.42,0,-1		70
+C	-5,2,20		0.33,0,-1		70
 
 # L: light above, position, intensity, <255,255,255> white color
-L	-15,30,20	0.89		255,255,255
+L	-15,10,20	0.89		255,255,255
 
 # L: light above, position, intensity, <255,255,255> white color
-L	10,30,20	0.89		255,255,255
+L	10,10,20	0.89		255,255,255
 
 # L: light below, position, intensity, <255,255,255> white color
 L	0,0.1,10	0.89		255,255,255
@@ -29,7 +29,16 @@ L	0,0.1,10	0.89		255,255,255
 # pl		0,0,0	0,1,0	255,255,255		1			10			1	255,255,0	2
 
 # pl: position, normal, 	color	specular	shininess	checker	reflectivity	transparency	ior
-pl		0,0,0	0,1,0		0,255,0		1			10			2		0.5
+pl		0,0,0	0,1,0		0,255,0		1			10			2		0.55
+
+# pl: position, normal, 	color	specular	shininess	checker	reflectivity	transparency	ior
+pl		5,0,-5	0.5,0,1		0,255,0		1			10			2		1.0
+
+# pl: position, normal, 	color	specular	shininess	checker	reflectivity	transparency	ior
+pl		3,0,0	-1,0,0		0,255,0		1			10			2		1.0
+
+# pl: position, normal, 	color	specular	shininess	checker	reflectivity	transparency	ior
+pl		0,11,0	0,-1,0		0,255,0		1			10			2		1.0
 
 # sp: sphere, <0,0,10> center, <5> radius, <255,0,0> red color
 sp	0,1,0		3		255,0,0		1		20

@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/13 14:27:33 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/14 16:03:50 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINIRT_H
 
 # define _GNU_SOURCE
+# define MAX_DEPTH 5
 # include <math.h>
 # include <float.h> // for DBL_MAX
 # include <stdlib.h>
@@ -80,6 +81,13 @@ typedef enum e_obj_type
 	CONE
 }					t_obj_type;
 
+// Checker vs Mirror pattern in the .rt config files
+typedef enum e_check
+{
+	CHECKER = 1,
+	MIRROR = 2
+}					t_check;
+
 typedef struct s_object
 {
 	t_obj_type		type;
@@ -89,9 +97,15 @@ typedef struct s_object
 	double			shine;	// specular blur, 1 blurred, 100 sharp,
 							//						1000 mirror @bonus prop
 	// --- checkerboard pattern ---
-	int				checker;		// a simple flag (0 or 1)
+	int				checker;		// flag,
+									//		0: no data,
+									//		1: checkerboard pattern
+									//		2: reflectivity
 	t_color			color2;			// the second color of the pattern
 	double			pattern_scale;	// the size of the checker squares
+	// --- reflectivity ---
+	double			reflect;	// reflectivity in [0-1] range
+								// 0: no reflection, 1: perfect mirror
 	// --- pointer to object specific shape data and to the next object
 	void			*shape_data; // Pointer to one of the structs below
 	struct s_object	*next;
@@ -151,6 +165,7 @@ typedef struct s_hit_record
 	t_color			color;	// Color of the object hit
 	double			speci;	// specular intensity [0-1] range @bonus prop
 	double			shine;	// specular blur, 1 blurred, 100 sharp,
+	double			reflect;	// reflectivity, 0: nope, 1: perfect mirror
 	double			t;		// 'time' or distance along the ray
 	// t_object		*obj;	// The object that was hit
 	// int			front_face;	// 1 if ray hits from outside, 0 when
@@ -190,7 +205,7 @@ typedef struct s_hit_info
 	t_hit_part		part;	// which surface produced hit_t (wall or cap)
 }					t_hit_info;
 
-// A struct because of the 5 variable limit at specular contribution computatio
+// A struct because of the 5 variable limit at specular contrib. computation
 typedef struct s_spec_contrib
 {
 	t_vec3			light_dir;
@@ -356,7 +371,7 @@ t_color				calculate_lighting(t_hit_record *rec, t_scene *scene);
 
 /* --- renderer.c --- */
 int					color_to_int(t_color color);
-t_color				ray_color(t_ray *ray, t_scene *scene);
+// t_color				ray_color(t_ray *ray, t_scene *scene, int depth);
 void				render(t_scene *scene, t_mlx_data *mlx);
 
 #endif

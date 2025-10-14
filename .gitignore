@@ -10,3 +10,4 @@ src/render/*.o
 src/window/*.o
 libft/libft.a
 src/math/vec3_ops1.o
+miniRTbonus

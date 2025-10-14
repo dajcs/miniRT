@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 13:24:03 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/13 14:12:31 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/14 15:05:54 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,11 +96,20 @@ int	set_material(t_object *obj, char **tokens, int i)
 		return (error_msg("Shininess must be >= 1.0"));
 	if (!parse_int(tokens[i++], &obj->checker) || !obj->checker)
 		return (1);
-	if (!parse_color(tokens[i++], &obj->color2))
-		return (error_msg("Invalid 2nd color format"));
-	if (!parse_double(tokens[i], &obj->pattern_scale)
-		|| obj->pattern_scale <= 0)
-		return (error_msg("Pattern scale should be > 0"));
+	if (obj->checker == CHECKER)
+	{
+		if (!parse_color(tokens[i++], &obj->color2))
+			return (error_msg("Invalid 2nd color format"));
+		if (!parse_double(tokens[i], &obj->pattern_scale)
+			|| obj->pattern_scale <= 0)
+			return (error_msg("Pattern scale should be > 0"));
+	}
+	else if (obj->checker == MIRROR)
+	{
+		if (!parse_double(tokens[i++], &obj->reflect)
+			|| !validate_ratio(obj->reflect))
+			return (error_msg("Reflectivity must be in [0,1]"));
+	}
 	return (1);
 }
 
