@@ -1,4 +1,4 @@
-Of course. Here is a complete and detailed implementation for **Student B's Module 2 (Ray Tracing Engine)**. This code is designed to be Norminette-compliant and is broken down into logical files.
+
 
 This implementation covers the mandatory parts: ray generation, intersection with spheres and planes, and a lighting model with ambient light, diffuse light, and hard shadows. The cylinder intersection is left as a placeholder, as it is significantly more complex and should be tackled after the sphere and plane are working perfectly.
 
@@ -258,7 +258,7 @@ static t_ray	get_ray(t_camera *cam, int x, int y)
 	// For a proper FOV implementation, this needs to be more complex.
 	u = (double)x / (cam->win_width - 1);
 	v = (double)y / (cam->win_height - 1);
-	
+
 	// A more advanced camera setup (like in the revised plan) is needed here
 	// for proper FOV and orientation. This is a simplified placeholder.
 	ray_direction = vec3_add(cam->pixel00_loc, vec3_add(
