@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 18:30:51 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/14 16:04:49 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/15 14:38:52 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,80 +34,103 @@ int	color_to_int(t_color color)
 	return ((r << 16) | (g << 8) | b);
 }
 
-/* ray_color()
-	Traces a single ray and determines the color it sees.
+/* hit_anything()
+	Iterate through all objects of the scene to determine if ray hits anything
 	Input:
-		*ray:	the ray to trace
-		*scene:	the scene containing all objects
-	Return: the computed t_color for the ray
+		*ray:	the ray we're testing
+		*scene:	the scene with the objects
+		*rec:	the hit_record which should be set if anything is hit
+	Return 1 if something is hit, 0 otherwise
 
-	This is the core of the ray tracer. It iterates through every object in the
-	scene to find the closest intersection point along the ray.
-	If an intersection occurs, it calls calculate_lighting() to shade that point.
-	If the ray hits nothing, it returns a background color (black)
+	1. Initiate hit=0, starting obj, closest_so_far=DBL_MAX
+	2. Iterate through all objects
+	3.	if hit_object:
+			- update closest_so_far
+			- copy temp_rec data into callers record *rec
+			- set hit to 1
+	4. Return hit.
 */
-static t_color	ray_color(t_ray *ray, t_scene *scene, int depth)
+static int	hit_anything(t_ray *ray, t_scene *scene, t_hit_record *rec)
 {
-	t_hit_record	rec;
 	t_hit_record	temp_rec;
 	t_object		*obj;
-	int				hit_anything;
 	double			closest_so_far;
-	t_color			local_color;
-	t_color			reflected_color;
+	int				hit;
 
-	// --- BASE CASE: Stop recursion if we've bounced too many times. ---
-	if (depth <= 0)
-		return ((t_color){0, 0, 0}); // return black
-
-	// find closest hit
-	hit_anything = 0;
-	closest_so_far = DBL_MAX;
+	hit = 0;
 	obj = scene->objects;
+	closest_so_far = DBL_MAX;
 	while (obj)
 	{
 		if (hit_object(obj, ray, closest_so_far, &temp_rec))
 		{
-			hit_anything = 1;
 			closest_so_far = temp_rec.t;
-			rec = temp_rec;
+			*rec = temp_rec;
+			hit = 1;
 		}
 		obj = obj->next;
 	}
+	return (hit);
+}
 
-	// if nothing hit, return black
-	if (!hit_anything)
+/* ray_color()
+	Recursive: traces a ray and eventual reflections and determines the
+				resulting color.
+	Input:
+		*ray:	the ray to trace
+		*scene:	the scene containing all objects
+		depth:	recursion depth
+	Return: the computed t_color for the ray
+
+	This is the core of the ray tracer. It iterates through every object in the
+	scene to find the closest intersection point along the ray.
+	If the ray hits nothing, it returns a background color (black)
+	If an intersection occurs,
+		it calls calculate_lighting() to shade that point.
+	If the object is reflective: recursive calling itself to determine the
+	reflected color contribution.
+
+	0. BASE CASE: Stop recursion if we've bounced too many times, return black
+	1. Find closest hit with hit_anything()
+		If nothing hit, return black
+		If something hit, the hit_record rec is set
+	2. STEP 1: Calculate the object's own color (Local Illumination)
+		this is the color of the surface itself, based on diffuse and specular
+		ligthing
+	3. STEP 2: If object is reflective: calculate the reflected color
+		- calculate the direction of the reflected ray with vec3_reflect()
+		- new ray origin at hit point + small offset to avoid self intersection
+		- RECURSIVE CALL: checking what the reflection ray sees by calling this
+			same function with the new `reflection_ray` and `depth - 1`
+		If the object is not reflective return black (no reflected color)
+	4. STEP 3: Combine the local and reflected colors
+		The final color is a blend, controlled by the object's reflectivity.
+		A perfect mirror (reflectivity=1) shows only the reflected_color.
+		A normal object (reflectivity=0) shows only the local_color.
+*/
+static t_color	ray_color(t_ray *ray, t_scene *scene, int depth)
+{
+	t_hit_record	rec;
+	t_color			local_color;
+	t_color			reflected_color;
+	t_ray			reflection_ray;
+
+	if (depth <= 0)
 		return ((t_color){0, 0, 0});
-
-	// --- STEP 1: Calculate the object's own color (Local Illumination) ---
-	// this is the color of the surface itself, based on diffuse and specular
-	// lighting.
+	if (!hit_anything(ray, scene, &rec))
+		return ((t_color){0, 0, 0});
 	local_color = calculate_lighting(&rec, scene);
-
-	// --- STEP 2: Calculate the reflected color (if object is reflective) ---
 	if (rec.reflect > 0)
 	{
-		t_ray	reflection_ray;
-
-		// Calculate the direction of the reflected ray
 		reflection_ray.direction = vec3_reflect(ray->direction, rec.normal);
-		// The new ray starts at the hit point (with a small offset to avoid self intersection)
-		reflection_ray.origin = vec3_add(rec.p, vec3_mul(reflection_ray.direction, 0.001));
-
-		// --- RECURSIVE CALL ---
-		// checking what the reflection ray sees by calling this same function
+		reflection_ray.origin = vec3_add(rec.p,
+				vec3_mul(reflection_ray.direction, 0.001));
 		reflected_color = ray_color(&reflection_ray, scene, depth - 1);
 	}
 	else
-		reflected_color = (t_color){0, 0, 0};  // not reflective / no reflected color
-
-	// --- STEP 3: Combine the local and reflected colors ---
-	// The final color is a blend, controlled by the object's reflectivity.
-	// A perfect mirror (reflectivity=1) shows only the reflected_color.
-	// A normal object (reflectivity=0) shows only the local_color.
+		reflected_color = (t_color){0, 0, 0};
 	return (vec3_add(vec3_mul(local_color, 1.0 - rec.reflect),
-		vec3_mul(reflected_color, rec.reflect)));
-
+			vec3_mul(reflected_color, rec.reflect)));
 }
 
 /* render()

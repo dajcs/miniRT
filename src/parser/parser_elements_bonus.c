@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 13:24:03 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/14 15:05:54 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/15 13:04:07 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ int	parse_light(char **tokens, t_scene *scene)
 // <color> <specular> <shininess> <checker flag> <color2> <pattern_scale>
 int	set_material(t_object *obj, char **tokens, int i)
 {
+	set_default_material(obj);
 	if (!parse_color(tokens[i++], &obj->color))
 		return (error_msg("Invalid color format"));
 	if (!parse_double(tokens[i++], &obj->speci) || !validate_ratio(obj->speci))

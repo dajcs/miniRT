@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/14 16:03:50 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/15 13:04:53 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define MINIRT_H
 
 # define _GNU_SOURCE
-# define MAX_DEPTH 5
+# define MAX_DEPTH 6
 # include <math.h>
 # include <float.h> // for DBL_MAX
 # include <stdlib.h>
@@ -84,6 +84,7 @@ typedef enum e_obj_type
 // Checker vs Mirror pattern in the .rt config files
 typedef enum e_check
 {
+	DEFAULT = 0,
 	CHECKER = 1,
 	MIRROR = 2
 }					t_check;
@@ -286,6 +287,7 @@ int					parse_double(char *str, double *val);
 int					parse_int(char *str, int *val);
 int					validate_angle(t_cone *co);
 char				**get_tokens(char *line);
+void				set_default_material(t_object *obj);
 
 /* --- parser_validation.c --- */
 int					validate_ratio(double ratio);
