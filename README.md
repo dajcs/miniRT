@@ -6,7 +6,8 @@ miniRT (mini Ray-Tracing) project @ school 42
 - Path Tracing (Hollywood movies)
 - Ray Casting (simplest, 1 ray - miniRT mandatory part)
 - Recursive Ray Tracing (ray reflections - miniRT bonus part)
-- Distributed Ray Tracing
+
+---
 
 ### Resources
 
@@ -22,12 +23,12 @@ miniRT (mini Ray-Tracing) project @ school 42
 - [Computerphile: Path Tracing](https://www.youtube.com/watch?v=3OKj0SQ_UTw)
 - [Gemini 2.5 Pro](https://aistudio.google.com/prompts/1vRVehQahgudJQ6T0p-WscGrNWDqiiD2H)
 -->
-- [Cem Yuksel - Intro to CG: Chapter 19. Ray Tracing](https://www.youtube.com/watch?v=gGKup9tUSrU&list=PLplnkTzzqsZTfYh4UbhLGpI5kGd5oW_Hh&index=20)
+- [Cem Yuksel - Intro to Computer Graphics: Chapter 19. Ray Tracing](https://www.youtube.com/watch?v=gGKup9tUSrU&list=PLplnkTzzqsZTfYh4UbhLGpI5kGd5oW_Hh&index=20)
 
 
 ## What is doing our miniRT?
 
-- Parsing a simple scene description file (.rt) and creating a 3D scene with:
+A. **Parsing a simple scene description file (.rt) and creating a 3D scene with**:
   - One ambient light
   - One camera
   - Multiple light sources
@@ -47,7 +48,7 @@ miniRT (mini Ray-Tracing) project @ school 42
 
 ```
 
-- Rendering the scene using Ray Tracing:
+B. **Rendering the scene using Ray Tracing**:
   - We put an imaginary rectangle (called viewport) in front of the camera.
   - For each pixel in the viewport, we generate a ray from the camera through that pixel.
   - We check if that ray intersects with any object in the scene.
@@ -80,6 +81,8 @@ Possible additions:
 
 Quiz:
 - Is `reflectivity` a combination of `specular` + `shininess`? ( [answer](.test/reflectivity_specular_shininess.md) )
+
+---
 
 ## miniRT Project Collaboration Plan for 2 Students
 
