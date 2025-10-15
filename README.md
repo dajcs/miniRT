@@ -4,8 +4,8 @@ miniRT (mini Ray-Tracing) project @ school 42
 ### RT Algorithms
 
 - Path Tracing (Hollywood movies)
-- Ray Casting (simplest, 1 ray)
-- Recursive Ray Tracing
+- Ray Casting (simplest, 1 ray - miniRT mandatory part)
+- Recursive Ray Tracing (ray reflections - miniRT bonus part)
 - Distributed Ray Tracing
 
 ### Resources
@@ -20,15 +20,15 @@ miniRT (mini Ray-Tracing) project @ school 42
 <!---
 - [Computerphile: Recursive Ray Tracing](https://www.youtube.com/watch?v=nOCPpT-Sn0A)
 - [Computerphile: Path Tracing](https://www.youtube.com/watch?v=3OKj0SQ_UTw)
+- [Gemini 2.5 Pro](https://aistudio.google.com/prompts/1vRVehQahgudJQ6T0p-WscGrNWDqiiD2H)
 -->
 - [Cem Yuksel - Intro to CG: Chapter 19. Ray Tracing](https://www.youtube.com/watch?v=gGKup9tUSrU&list=PLplnkTzzqsZTfYh4UbhLGpI5kGd5oW_Hh&index=20)
 
 
 ## What is doing our miniRT?
 
-- Parsing a simple scene description file (.rt)
-- Creating a 3D scene with:
-  - Ambient light
+- Parsing a simple scene description file (.rt) and creating a 3D scene with:
+  - One ambient light
   - One camera
   - Multiple light sources
   - Multiple objects (spheres, planes, cylinders)
@@ -51,13 +51,27 @@ miniRT (mini Ray-Tracing) project @ school 42
 
 ---
 
+### Bonus part
+
+Implemented functions:
+- multiple light sources with color
+- specular reflection (the 3rd component of the Phong model)
+- checkerboard pattern basic implementation ([improved version](.test/checker_dust_uv_solution.md))
+- one other second degree object: cone
+- mirrored reflection
+
+Possible additions:
+- [bump map textures](.test/bump_map_texture.md) (to visualize objects with uneven surfaces)
+- [refraction](.test/refraction.md) (to visualize transparent/semi-transparent objects)
+
+
 ## miniRT Project Collaboration Plan for 2 Students
 
 ### 1. Overview & Philosophy
 
-This plan refines the initial component division. 
-- **Student A** will focus on the **"front-end"** – parsing the scene description and getting it to the screen. 
-- **Student B** will own the **"back-end"** – the core rendering logic that turns the scene data into pixels. 
+This plan refines the initial component division.
+- **Student A** will focus on the **"front-end"** – parsing the scene description and getting it to the screen.
+- **Student B** will own the **"back-end"** – the core rendering logic that turns the scene data into pixels.
 
 This clean separation minimizes dependencies and allows for independent testing.
 
@@ -319,4 +333,7 @@ This is the foundation. It must be flawless.
 1.  **Unit Test Math:** Write a separate `main` to test all vector functions with known inputs and outputs.
 2.  **Test Intersections:** Write tests that create specific rays and objects and verify that `hit_object` returns the correct intersection point `t` and normal vector.
 3.  **PPM Image Output:** Instead of relying on `minilibX`, create a function that writes the rendered image to a `.ppm` file. This is a simple text-based image format. It allows you to test the entire rendering engine on your machine without needing Student A's part to be complete. You can view the `.ppm` files with a simple image viewer.
+
+
+### [Start with the Rendering Code](.test/render_code1.md)
 
