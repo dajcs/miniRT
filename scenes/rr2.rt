@@ -1,0 +1,51 @@
+# A: ambient light, <0.2> intensity, <255,255,255> white color
+A	0.1		255,255,255
+
+#
+#    +Y (Up)
+#          |
+#          |
+#          |
+#          +----------------> +X (Right)
+#         /
+#        /
+#       /
+#      +Z (Towards you)
+#
+
+# C: camera, position,  orientation 	field of view
+C			-5,2,10		0.3,0,-1			70
+
+# L: light above, position, intensity,  white color
+L				-10,9,10	0.89		255,255,255
+
+# L: light above, position, intensity, <255,255,255> white color
+L				5,5,10		0.89		255,255,255
+
+# L: light below, position, intensity, <255,255,255> white color
+L				0,4,0		0.89		255,255,255
+
+# pl: position, normal, 	color	specular	shininess	checker	color2		scale
+# pl		0,0,0	0,1,0	255,255,255		1			10			1	255,255,0	2
+
+# pl: position, normal, 	color	specular	shininess	checker	reflectivity	transparency	ior
+pl		0,0,22	0,0,-1		0,255,0		1			10			2		1.0
+
+# pl: position, normal, 	color	specular	shininess	checker	reflectivity	transparency	ior
+pl		0,0,-5	0,0,1		0,255,0		1			10			2		1.0
+
+# pl: position,		normal, 	color	specular	shininess	checker	reflectivity	transparency	ior
+pl		0,-2,0		0,1,0		0,255,0		1			10			2		0.89
+
+# pl: position, normal, 	color	specular	shininess	checker	reflectivity	transparency	ior
+pl		0,11,0	0,-1,0		0,255,0		1			10			2		1.0
+
+# sp: center pos,	radius,		 color		specular	shininess	checker	reflectivity	transparency	ior
+sp		0,1,2		3			255,0,0			1			20			2		0
+
+# A cone with its tip at (0,10,20), pointing down, with a 30-degree total angle.
+# co: cone, [tip_xyz] [axis_xyz] [half angle_deg] [height] [color]	 [specular] [shininess] checker	reflectivity	transparency	ior
+co			0,4,2		0,-1,0		30.0			2.0		0,255,0		1			22			2		0
+
+# cy | position |    axis | radius |  height | color | specular | shine | checker | color2 | scale
+cy 		0,2,2		1,0,0	 1	 		5	 0,0,255	 1			20		2		0.5
