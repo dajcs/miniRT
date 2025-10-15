@@ -2,11 +2,9 @@
 
 Checker pattern looks nice on curved surfaces, but on plane surfaces sometimes "dust" appears. This artifact is introduced by get_pattern_color() because it appears even when only the ambient light is present.
 
-You have encountered a classic and very subtle problem in computer graphics known as **"surface acne"** or **"self-intersection artifacts,"** caused by floating-point imprecision. Your diagnosis is perfect—it is indeed happening in `get_pattern_color`, and your test with only ambient light correctly isolates it from lighting issues.
+### The Root Cause of the "Dust"
 
-### The "Why": The Root Cause of the "Dust"
-
-The artifact is not random dust. It's a form of **Z-fighting** happening at the boundaries of your checkerboard squares.
+The artifact is not random dust. It's a form of **Z-fighting** happening at the boundaries of the checkerboard squares.
 
 1.  **Floating-Point Numbers Aren't Perfect:** A `double` cannot represent every possible number. There are tiny gaps. A number that should be exactly `3.0` might be stored as `2.9999999999999996` or `3.0000000000000001`.
 
@@ -33,7 +31,7 @@ Here’s how to implement it:
 
 We need two perpendicular vectors that lie on the plane's surface. We can generate them from the plane's normal vector.
 
-Add this helper function, perhaps to a new `src/render/uv_mapping.c` file or `vec3_ops.c`.
+This helper function can be added to a new `src/render/uv_mapping.c` file or `vec3_ops.c`.
 
 ```c
 /**
@@ -54,7 +52,7 @@ t_vec3	get_plane_u_axis(t_vec3 n)
 		world_up = (t_vec3){0, 0, 1}; // Normal is aligned with Y, use Z as up
 	else
 		world_up = (t_vec3){0, 1, 0}; // Default world up
-	
+
 	u_axis = vec3_normalize(vec3_cross(world_up, n));
 	return (u_axis);
 }
@@ -98,7 +96,7 @@ void	get_plane_uv(t_hit_record *rec, t_plane *pl, double *u, double *v)
 
 #### Step 3: Refactor `get_pattern_color` to Use the Correct Method
 
-Now, your main pattern function becomes a dispatcher. It uses the stable 2D UV mapping for planes and can keep the simpler 3D mapping for curved surfaces where it works well.
+The main pattern function becomes a dispatcher. It uses the stable 2D UV mapping for planes and can keep the simpler 3D mapping for curved surfaces where it works well.
 
 ```c
 /**
@@ -130,7 +128,7 @@ t_color	get_pattern_color(t_hit_record *rec, t_object *obj)
 					floor(rec->p.y * obj->pattern_scale) + \
 					floor(rec->p.z * obj->pattern_scale));
 	}
-	
+
 	// Use `abs()` to handle negative sums correctly with modulo
 	if (abs(sum) % 2 == 0)
 		return (obj->color);
@@ -139,4 +137,4 @@ t_color	get_pattern_color(t_hit_record *rec, t_object *obj)
 }
 ```
 
-By switching to this UV-based approach for planes, you are using the same robust technique found in professional render engines. Your checkerboard pattern on planes will now be perfectly clean and sharp, with no "dust" or artifacts at the edges.
+By switching to this UV-based approach for planes, we're getting the same robust technique found in professional render engines. The checkerboard pattern on planes will now be perfectly clean and sharp, with no "dust" or artifacts at the edges.

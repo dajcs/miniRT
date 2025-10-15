@@ -1,10 +1,8 @@
 # Handling Bump Map Texture Artifacts in miniRT
 
-When applying bump mapping in miniRT, you might notice some unwanted artifacts, such as "dust" or noise on surfaces, especially on planes. This is often due to floating-point precision issues when calculating texture coordinates and normals.
-
 It's a significant step up in complexity from the checkerboard pattern but delivers a huge "wow" factor.
 
-### 1. The "What": The Visual Effect
+### 1. The Visual Effect
 
 The "Handle bump map textures" feature creates the **illusion of fine, detailed surface geometry without actually adding any new polygons or making the object more complex**.
 
@@ -16,7 +14,7 @@ Imagine you want to render a brick wall.
 
 **Analogy:** Think of the difference between a perfectly smooth billiard ball and an orange. Both are spheres, but the orange's peel has tiny bumps and craters. Bump mapping is a technique to make the smooth billiard ball *look* and *shade* like it has the detailed surface of the orange peel.
 
-### 2. The "How": The Core Trick - Faking the Normals
+### 2. The Core Trick: Faking the Normals
 
 The entire lighting calculation you've built (diffuse and specular) depends on one crucial piece of information: the **surface normal**. The normal is the vector that tells the light which way the surface is facing at a given point.
 

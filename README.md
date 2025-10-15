@@ -47,7 +47,7 @@ miniRT (mini Ray-Tracing) project @ school 42
 	- The object's color in specular light (bonus part)
 	  - We calculate the reflection direction of the light ray on the surface.
 	  - We calculate the specular contribution based on the angle between the reflection direction and the view direction.
-  - We combine these contributions to get the final color of the pixel.
+  - We combine the ambient + diffuse + specular contributions to get the final color of the pixel.
 
 ---
 
@@ -64,6 +64,8 @@ Possible additions:
 - [bump map textures](.test/bump_map_texture.md) (to visualize objects with uneven surfaces)
 - [refraction](.test/refraction.md) (to visualize transparent/semi-transparent objects)
 
+Quiz:
+- Is `reflectivity` a combination of `specular` + `shininess`? ( [answer](.test/reflectivity_specular_shininess.md) )
 
 ## miniRT Project Collaboration Plan for 2 Students
 
