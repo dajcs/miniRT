@@ -28,6 +28,6 @@ cy				-3,3,-11		0,1,0	10	 3	255,255,0		0.7		20
 cy				-3,-5,-11		0,1,0	10	 3	0,0,255			0.7		20
 cy				-3,-9,-11		0,1,0	10	 3	255,0,255		0.7		20
 
-# co: cone, [tip_xyz] [axis_xyz] [half angle_deg] [height] [color]	 [specular] [shininess]
-co			0,-10,20		1,2,0		30.0	 		11.0		255,111,0		1		22
+# co: cone, [tip_xyz] [axis_xyz] [half angle_deg] 	[height]	 [color]	 [specular] [shininess] [checker] [reflectivity]
+co			0,-10,20		1,2,0		30.0	 		11.0		255,111,0		1		22			2		0.42
 co			7,-2,27		0,-1,0		15.0	 		8.0			255,33,33		1		22

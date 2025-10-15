@@ -84,6 +84,10 @@ Quiz:
 
 ---
 
+![bonus render](.test/bonus_render.png)
+
+---
+
 ## miniRT Project Collaboration Plan for 2 Students
 
 ### 1. Overview & Philosophy
