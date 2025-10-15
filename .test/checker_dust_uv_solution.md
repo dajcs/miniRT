@@ -1,6 +1,6 @@
+# Checker Pattern "Dust" on Planes: Diagnosis and Solution
 
-Checker patter looks nice on curved surfaces, but on plane surfaces there some "dust" appears. This artifact is introduced by get_pattern_color() because it appears even when only the ambien light is present
-
+Checker pattern looks nice on curved surfaces, but on plane surfaces sometimes "dust" appears. This artifact is introduced by get_pattern_color() because it appears even when only the ambient light is present.
 
 You have encountered a classic and very subtle problem in computer graphics known as **"surface acne"** or **"self-intersection artifacts,"** caused by floating-point imprecision. Your diagnosis is perfect—it is indeed happening in `get_pattern_color`, and your test with only ambient light correctly isolates it from lighting issues.
 

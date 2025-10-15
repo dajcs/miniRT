@@ -8,6 +8,8 @@ miniRT (mini Ray-Tracing) project @ school 42
 - Recursive Ray Tracing
 - Distributed Ray Tracing
 
+### Resources
+
 - [Ray Tracing in 2 minutes](https://www.youtube.com/watch?v=oCsgTrGLDiI)
 - [Ray Tracing in One Weekend (book)](https://raytracing.github.io/books/RayTracingInOneWeekend.html)
 - [Ray Tracing: The Next Week (book)](https://raytracing.github.io/books/RayTracingTheNextWeek.html)
@@ -22,20 +24,30 @@ miniRT (mini Ray-Tracing) project @ school 42
 - [Cem Yuksel - Intro to CG: Chapter 19. Ray Tracing](https://www.youtube.com/watch?v=gGKup9tUSrU&list=PLplnkTzzqsZTfYh4UbhLGpI5kGd5oW_Hh&index=20)
 
 
-### Recommended Ray Tracing Method: Whitted-Style (Recursive) Ray Tracing
+## What is doing our miniRT?
 
-The method Recursive Ray Tracing is often called **Whitted-Style Ray Tracing**. It's a good choice for this project for several reasons:
+- Parsing a simple scene description file (.rt)
+- Creating a 3D scene with:
+  - Ambient light
+  - One camera
+  - Multiple light sources
+  - Multiple objects (spheres, planes, cylinders)
 
-*   **Simplicity and Elegance:** The core logic is straightforward: for each pixel, you trace a primary ray. If it hits an object, you then trace secondary rays from the hit point towards lights (for shadows) and in reflection/refraction directions.
-*   **Scalability for Bonuses:** It can start with a recursion depth of 1 (or even 0, which means no reflections) for the mandatory part. This simplifies the initial implementation to only handle primary rays and shadow rays. Later, for bonuses like reflective surfaces, you can easily increase the recursion depth.
-*   **Educational Value:** It's the classic ray tracing algorithm and provides a solid foundation in computer graphics concepts.
-
-Given the project constraints and hardware, a recursive approach with a limited depth will perform adequately. For the mandatory part, implement a "depth 1" trace:
-
-1.  **Primary Ray:** From the camera through the pixel.
-2.  **Shadow Rays:** From the intersection point to each light source.
-
-This avoids the complexity of full global illumination models like Path Tracing, which would be overkill and likely too slow given the constraints.
+- Rendering the scene using Ray Tracing:
+  - We put an imaginary rectangle (called viewport) in front of the camera.
+  - For each pixel in the viewport, we generate a ray from the camera through that pixel.
+  - We check if that ray intersects with any object in the scene.
+  - If doesn't hit any object, the pixel will be colored with a background color (black).
+  - If it hits an object, that pixel's color is determined by the Phong illumination model:
+  	- The object's color in ambient light
+	- The object's color in diffuse light
+	  - From the hit point, we generate a ray to each light source.
+	  - If that ray hits another object before reaching the light source, that light is blocked (in shadow).
+	  - If the ray reaches the light source, we calculate the diffuse contribution based on the angle between the light direction and the surface normal.
+	- The object's color in specular light (bonus part)
+	  - We calculate the reflection direction of the light ray on the surface.
+	  - We calculate the specular contribution based on the angle between the reflection direction and the view direction.
+  - We combine these contributions to get the final color of the pixel.
 
 ---
 
@@ -53,7 +65,7 @@ This clean separation minimizes dependencies and allows for independent testing.
 
 ### 2. Refined Shared Data Structures (`include/minirt.h`)
 
-Here are some suggested improvements to your initial structures for clarity and efficiency.
+Here are some suggested improvements to the initial structures (changed in the final version).
 
 ```c
 #ifndef MINIRT_H

@@ -1,4 +1,4 @@
-
+# Ray Tracing Implementation
 
 This implementation covers the mandatory parts: ray generation, intersection with spheres and planes, and a lighting model with ambient light, diffuse light, and hard shadows. The cylinder intersection is left as a placeholder, as it is significantly more complex and should be tackled after the sphere and plane are working perfectly.
 
