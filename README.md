@@ -32,6 +32,20 @@ miniRT (mini Ray-Tracing) project @ school 42
   - One camera
   - Multiple light sources
   - Multiple objects (spheres, planes, cylinders)
+  - We're placing these items in the 3D scene with coordinates:
+```
+
+    +Y (Up)
+          |
+          |
+          |
+          +----------------> +X (Right)
+         /
+        /
+       /
+      +Z (Towards you)
+
+```
 
 - Rendering the scene using Ray Tracing:
   - We put an imaginary rectangle (called viewport) in front of the camera.
@@ -39,14 +53,14 @@ miniRT (mini Ray-Tracing) project @ school 42
   - We check if that ray intersects with any object in the scene.
   - If doesn't hit any object, the pixel will be colored with a background color (black).
   - If it hits an object, that pixel's color is determined by the Phong illumination model:
-  	- The object's color in ambient light
-	- The object's color in diffuse light
-	  - From the hit point, we generate a ray to each light source.
-	  - If that ray hits another object before reaching the light source, that light is blocked (in shadow).
-	  - If the ray reaches the light source, we calculate the diffuse contribution based on the angle between the light direction and the surface normal.
-	- The object's color in specular light (bonus part)
-	  - We calculate the reflection direction of the light ray on the surface.
-	  - We calculate the specular contribution based on the angle between the reflection direction and the view direction.
+  	1. The object's color in ambient light
+	2. The object's color in diffuse light
+	    - From the hit point, we generate a ray to each light source.
+	    - If that ray hits another object before reaching the light source, that light is blocked (in shadow).
+	    - If the ray reaches the light source, we calculate the diffuse contribution based on the angle between the light direction and the surface normal.
+	3. The object's color in specular light (bonus part)
+	    - We calculate the reflection direction of the light ray on the surface.
+	    - We calculate the specular contribution based on the angle between the reflection direction and the view direction.
   - We combine the ambient + diffuse + specular contributions to get the final color of the pixel.
 
 ---
@@ -58,7 +72,7 @@ Implemented functions:
 - specular reflection (the 3rd component of the Phong model)
 - checkerboard pattern basic implementation ([improved version](.test/checker_dust_uv_solution.md))
 - one other second degree object: cone
-- mirrored reflection
+- ray reflections with recursive ray tracing
 
 Possible additions:
 - [bump map textures](.test/bump_map_texture.md) (to visualize objects with uneven surfaces)
