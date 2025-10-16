@@ -80,7 +80,10 @@ Possible additions:
 - [refraction](.test/refraction.md) (to visualize transparent/semi-transparent objects)
 
 Quiz:
-- Is `reflectivity` a combination of `specular` + `shininess`? ( [answer](.test/reflectivity_specular_shininess.md) )
+- Is `reflectivity` a combination of `specular` + `shininess`? ( [answer](.test/reflectivity_specular_shininess.md) )  \
+On the picture below we can see the specular reflections on the red/white sphere on the left, on the blue cylinder or on the reddish cone on the right. Here only the lights are reflected in a diffuse way. We have one more sphere with perfect mirror-like reflectivity (reflectivity = 1.0) and a cone with partial reflectivity (reflectivity = 0.42), these objects reflect all the scene around them, including other objects.  \
+**Note**: The light sources can not be seen by the camera - this is valid even in professional renderers like [Blender](https://www.blender.org/). I was quite annoyed by this when I was playing around with Blender, but now after building this project I can understand why. It is because the light source in our model is a point with no size, so the probability of a ray hitting exactly the light source is almost zero. In Blender we can simulate real light sources by creating an object with a light-emitting material, like a small sphere. This way the light source has a size and can be seen by the camera. This can be another bonus addition to miniRT: 
+- [emissive materials](.test/glow.md) (to create visible light sources)
 
 ---
 
