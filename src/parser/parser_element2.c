@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 14:26:45 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/13 10:44:51 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/16 10:35:16 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,14 @@ int	parse_plane(char **tokens, t_scene *scene)
 	obj = malloc(sizeof(t_object));
 	pl = malloc(sizeof(t_plane));
 	if (!obj || !pl)
-		return (error_msg("Plane: memory allocation failed"));
+		return (obj_err("Plane: memory allocation failed", obj, pl));
 	if (!parse_vec3(tokens[1], &pl->point, 0))
-		return (error_msg("Plane: invalid point coordinates"));
+		return (obj_err("Plane: invalid point coordinates", obj, pl));
 	if (!parse_vec3(tokens[2], &pl->normal, 1)
 		|| !validate_norm_vec3(pl->normal))
-		return (error_msg("Plane: invalid normal vector"));
+		return (obj_err("Plane: invalid normal vector", obj, pl));
 	if (!parse_color(tokens[3], &obj->color))
-		return (error_msg("Plane: invalid color format"));
+		return (obj_err("Plane: invalid color format", obj, pl));
 	obj->type = PLANE;
 	obj->shape_data = pl;
 	obj->next = scene->objects;
@@ -52,17 +52,17 @@ int	parse_cylinder(char **tokens, t_scene *scene)
 	obj = malloc(sizeof(t_object));
 	cy = malloc(sizeof(t_cylinder));
 	if (!obj || !cy)
-		return (error_msg("Cylinder: memory allocation failed"));
+		return (obj_err("Cylinder: memory allocation failed", obj, cy));
 	if (!parse_vec3(tokens[1], &cy->center, 0))
-		return (error_msg("Cylinder: invalid center coordinates"));
+		return (obj_err("Cylinder: invalid center coordinates", obj, cy));
 	if (!parse_vec3(tokens[2], &cy->axis, 1) || !validate_norm_vec3(cy->axis))
-		return (error_msg("Cylinder: invalid orientation vector"));
+		return (obj_err("Cylinder: invalid orientation vector", obj, cy));
 	if (!parse_double(tokens[3], &cy->diameter) || cy->diameter <= 0.0)
-		return (error_msg("Cylinder: invalid diameter"));
+		return (obj_err("Cylinder: invalid diameter", obj, cy));
 	if (!parse_double(tokens[4], &cy->height) || cy->height <= 0.0)
-		return (error_msg("Cylinder: invalid height"));
+		return (obj_err("Cylinder: invalid height", obj, cy));
 	if (!parse_color(tokens[5], &obj->color))
-		return (error_msg("Cylinder: invalid color format"));
+		return (obj_err("Cylinder: invalid color format", obj, cy));
 	cy->center = vec3_sub(cy->center, vec3_mul(cy->axis, cy->height / 2.0));
 	obj->type = CYLINDER;
 	obj->shape_data = cy;

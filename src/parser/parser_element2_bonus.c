@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 14:26:45 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/13 10:45:29 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/16 11:05:26 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,14 @@ int	parse_plane(char **tokens, t_scene *scene)
 	obj = malloc(sizeof(t_object));
 	pl = malloc(sizeof(t_plane));
 	if (!obj || !pl)
-		return (error_msg("Plane: memory allocation failed"));
+		return (obj_err("Plane: memory allocation failed", obj, pl));
 	if (!parse_vec3(tokens[1], &pl->point, 0))
-		return (error_msg("Plane: invalid point coordinates"));
+		return (obj_err("Plane: invalid point coordinates", obj, pl));
 	if (!parse_vec3(tokens[2], &pl->normal, 1)
 		|| !validate_norm_vec3(pl->normal))
-		return (error_msg("Plane: invalid normal vector"));
+		return (obj_err("Plane: invalid normal vector", obj, pl));
 	if (!set_material(obj, tokens, 3))
-		return (error_msg("Plane: `set_material()` error"));
+		return (obj_err("Plane: `set_material()` error", obj, pl));
 	obj->type = PLANE;
 	obj->shape_data = pl;
 	obj->next = scene->objects;
@@ -53,17 +53,17 @@ int	parse_cylinder(char **tokens, t_scene *scene)
 	obj = malloc(sizeof(t_object));
 	cy = malloc(sizeof(t_cylinder));
 	if (!obj || !cy)
-		return (error_msg("Cylinder: memory allocation failed"));
+		return (obj_err("Cylinder: memory allocation failed", obj, cy));
 	if (!parse_vec3(tokens[1], &cy->center, 0))
-		return (error_msg("Cylinder: invalid center coordinates"));
+		return (obj_err("Cylinder: invalid center coordinates", obj, cy));
 	if (!parse_vec3(tokens[2], &cy->axis, 1) || !validate_norm_vec3(cy->axis))
-		return (error_msg("Cylinder: invalid axis orientation vector"));
+		return (obj_err("Cylinder: invalid axis orientation vector", obj, cy));
 	if (!parse_double(tokens[3], &cy->diameter) || cy->diameter <= 0.0)
-		return (error_msg("Cylinder: diameter should be > 0"));
+		return (obj_err("Cylinder: diameter should be > 0", obj, cy));
 	if (!parse_double(tokens[4], &cy->height) || cy->height <= 0.0)
-		return (error_msg("Cylinder: height should be > 0"));
+		return (obj_err("Cylinder: height should be > 0", obj, cy));
 	if (!set_material(obj, tokens, 5))
-		return (error_msg("Cylinder: `set_material()` error"));
+		return (obj_err("Cylinder: `set_material()` error", obj, cy));
 	cy->center = vec3_sub(cy->center, vec3_mul(cy->axis, cy->height / 2.0));
 	obj->type = CYLINDER;
 	obj->shape_data = cy;
@@ -87,17 +87,17 @@ int	parse_cone(char **tokens, t_scene *scene)
 	obj = malloc(sizeof(t_object));
 	co = malloc(sizeof(t_cone));
 	if (!obj || !co)
-		return (error_msg("Cone: memory allocation failed"));
+		return (obj_err("Cone: memory allocation failed", obj, co));
 	if (!parse_vec3(tokens[1], &co->tip, 0))
-		return (error_msg("Cone: invalid tip coordinates"));
+		return (obj_err("Cone: invalid tip coordinates", obj, co));
 	if (!parse_vec3(tokens[2], &co->axis, 1) || !validate_norm_vec3(co->axis))
-		return (error_msg("Cone: invalid axis orientation vector"));
+		return (obj_err("Cone: invalid axis orientation vector", obj, co));
 	if (!parse_double(tokens[3], &co->angle) || !validate_angle(co))
-		return (error_msg("Cone: invalid angle"));
+		return (obj_err("Cone: invalid angle", obj, co));
 	if (!parse_double(tokens[4], &co->height) || co->height <= 0.0)
-		return (error_msg("Cone: height should be > 0"));
+		return (obj_err("Cone: height should be > 0", obj, co));
 	if (!set_material(obj, tokens, 5))
-		return (error_msg("Cone: `set_material()` error"));
+		return (obj_err("Cone: `set_material()` error", obj, co));
 	obj->type = CONE;
 	obj->shape_data = co;
 	obj->next = scene->objects;

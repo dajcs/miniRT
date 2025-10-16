@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 13:24:03 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/15 13:04:07 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/16 11:01:58 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,11 @@ int	parse_light(char **tokens, t_scene *scene)
 	if (!light)
 		return (error_msg("Light: memory allocation failed"));
 	if (!parse_vec3(tokens[1], &pos, 0))
-		return (error_msg("Light: invalid position coordinates"));
+		return (light_err("Light: invalid position coordinates", light));
 	if (!parse_double(tokens[2], &ratio) || !validate_ratio(ratio))
-		return (error_msg("Light: invalid brightness ratio"));
+		return (light_err("Light: invalid brightness ratio", light));
 	if (!parse_color(tokens[3], &color))
-		return (error_msg("Light: invalid color format"));
+		return (light_err("Light: invalid color format", light));
 	light->position = pos;
 	light->ratio = ratio;
 	light->color = color;
@@ -125,13 +125,13 @@ int	parse_sphere(char **tokens, t_scene *scene)
 	obj = malloc(sizeof(t_object));
 	sp = malloc(sizeof(t_sphere));
 	if (!obj || !sp)
-		return (error_msg("Sphere: memory allocation failed"));
+		return (obj_err("Sphere: memory allocation failed", obj, sp));
 	if (!parse_vec3(tokens[1], &sp->center, 0))
-		return (error_msg("Sphere: invalid center coordinates"));
+		return (obj_err("Sphere: invalid center coordinates", obj, sp));
 	if (!parse_double(tokens[2], &sp->radius) || sp->radius <= 0)
-		return (error_msg("Sphere: invalid diameter"));
+		return (obj_err("Sphere: invalid diameter", obj, sp));
 	if (!set_material(obj, tokens, 3))
-		return (error_msg("Sphere: `set_material()` error"));
+		return (obj_err("Sphere: `set_material()` error", obj, sp));
 	sp->radius /= 2.0;
 	obj->type = SPHERE;
 	obj->shape_data = sp;

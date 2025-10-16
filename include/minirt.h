@@ -6,7 +6,7 @@
 /*   By: anemet <anemet@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:36:49 by anemet            #+#    #+#             */
-/*   Updated: 2025/10/15 13:04:53 by anemet           ###   ########.fr       */
+/*   Updated: 2025/10/16 10:57:47 by anemet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,6 +254,8 @@ grep -E '^[^[:blank:]/#{}*][^()]*\('  *.c
 
 /* --- errors.c --- */
 int					error_msg(char *message);
+int					obj_err(char *message, t_object *obj, void *shape);
+int					light_err(char *message, t_light *light);
 
 /* --- parser.c --- */
 int					parse_line(char *line, t_scene *scene);
